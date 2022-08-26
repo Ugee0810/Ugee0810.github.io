@@ -26,7 +26,7 @@ title: Ugee's Tech Blog                          # the main title
 tagline: 신입 개발자를 꿈꾸는 사람의 기술 공부 블로그입니다.   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  Tech, GitHub Pages, Blog
+  GitHub Pages, Tech Blog
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: 'https://ugee-99.github.io/'
@@ -35,7 +35,7 @@ github:
   username: Ugee-99             # change to your github username
 
 twitter:
-  username: twitter_username            # change to your twitter username
+  username: # twitter_username            # change to your twitter username
 
 social:
   # Change to your full name.
@@ -44,8 +44,8 @@ social:
   email: shu990810@naver.com             # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/username      # change to your twitter homepage
-    - https://github.com/username       # change to your github homepage
+    # - https://twitter.com/username      # change to your twitter homepage
+    - https://github.com/Ugee-99       # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
@@ -73,7 +73,7 @@ google_analytics:
 #     light  - Use the light color scheme
 #     dark   - Use the dark color scheme
 #
-theme_mode: dark # [light|dark]
+theme_mode: light # [light|dark]
 
 # The CDN endpoint for images.
 # Notice that once it is assigned, the CDN url
