@@ -1,3 +1,11 @@
+---
+title:      Jekyll Chirpy theme Setting
+date:       "2022-08-26"
+categories: ["2022.08", "Tech Tip"]
+tags:       ["jekyll", "Chripy", "Github Pages"]
+# pin:        true
+---
+
 > # 푸쉬 전 로컬에서 확인하기
 >
 > ```

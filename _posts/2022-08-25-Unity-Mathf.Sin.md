@@ -1,13 +1,21 @@
+---
+title:      Mathf.Sin()곡선을 이용해 간단한 물결 애니메이션 구현하기
+date:       "2022-08-25"
+categories: ["2022.08", "Unity"]
+tags:       ["Unity"]
+# pin:        true
+---
+
 # y = sin x
 
     다양한 수학 공식을 알고 있다면, 복잡한 애니메이션을 쉽게 구현할 수 있다.
     ※ 보통 에셋스토어에도 있음
 
-sin 곡선의 공식을 이용해 위/아래 또는 좌/우로 부드럽게 움직이는 애니메이션 적용
+sin 곡선의 공식을 이용해 위/아래 또는 좌/우로 부드럽게 움직이는 곡선 애니메이션 적용
 
 ![image](https://user-images.githubusercontent.com/110334366/186622466-7e481e38-4ba4-44da-bad6-a29a066a2782.png)
 
-# 카메라가 이동 때 마다 물결 무빙 구현
+# 카메라가 이동 때 마다 물결 애니메이션 구현
 
 ```C#
 using System.Collections;
