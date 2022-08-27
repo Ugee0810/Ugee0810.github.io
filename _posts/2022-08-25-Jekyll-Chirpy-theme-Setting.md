@@ -1,10 +1,17 @@
 ---
 title:      Jekyll Chirpy theme Setting
-date:       "2022-08-26"
-categories: ["2022.08", "Tech Tip"]
-tags:       ["jekyll", "Chripy", "Github Pages"]
+date:       "2022-08-25"
+categories: ["Tech Tip", "Github Pages"]
+tags:       ["jekyll", "Github Pages", "Chripy"]
 # pin:        true
 ---
+
+# 참고 사이트
+- [Chirpy 테마 커스터마이징](https://www.irgroup.org/posts/Chirpy-%ED%85%8C%EB%A7%88-%EC%BB%A4%EC%8A%A4%ED%84%B0%EB%A7%88%EC%9D%B4%EC%A7%95/) By 하얀눈길
+
+---
+
+<br>
 
 > # 푸쉬 전 로컬에서 확인하기
 >
@@ -16,7 +23,7 @@ tags:       ["jekyll", "Chripy", "Github Pages"]
 > http://localhost:4000/
 > ```
 
-> # GitHub Pages 소스 확인하기
+> # GitHub Pages Source
 >
 > - _config.yml : 블로그 기본 환경세팅
 >

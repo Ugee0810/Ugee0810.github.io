@@ -1,13 +1,12 @@
 ---
 title:      Unity LifeCycle(유니티 생명주기)
 date:       "2022-08-25"
-categories: ["2022.08", "Unity"]
+categories: ["Unity"]
 tags:       ["Unity"]
 # pin:        true
 ---
 
-# ※ 참고 사이트
-
+# 참고 사이트
 - [Unity Documentation (스크립팅 개념 - 이벤트 함수의 실행 순서)](https://docs.unity3d.com/kr/2021.3/Manual/ExecutionOrder.html)
 
 ---

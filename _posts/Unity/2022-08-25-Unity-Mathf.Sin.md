@@ -1,7 +1,7 @@
 ---
 title:      Mathf.Sin()곡선을 이용해 간단한 물결 애니메이션 구현하기
 date:       "2022-08-25"
-categories: ["2022.08", "Unity"]
+categories: ["Unity"]
 tags:       ["Unity"]
 # pin:        true
 ---
