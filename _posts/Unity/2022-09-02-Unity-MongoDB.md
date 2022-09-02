@@ -30,7 +30,7 @@ using MongoDB.Driver;
 const string MONGO_URI = "mongodb+srv://User:User@cluster0.lsm0ujc.mongodb.net/?retryWrites=true&w=majority";
 ```
 
-로그인 구현
+## 로그인 구현
 
 ```c#
 public class MongoDBCtrl : MonoBehaviour
@@ -55,7 +55,7 @@ public class MongoDBCtrl : MonoBehaviour
 }
 ```
 
-데이터베이스 가져오기
+## 데이터베이스 가져오기
 
 ```c#
 public class MongoDBCtrl : MonoBehaviour
@@ -73,7 +73,7 @@ public class MongoDBCtrl : MonoBehaviour
 }
 ```
 
-콜렉션 가져오기
+## 콜렉션 가져오기
 
 ```c#
 public class MongoDBCtrl : MonoBehaviour
@@ -163,7 +163,7 @@ public class MongoDBCtrl : MonoBehaviour
 }
 ```
 
-Insert
+## Insert
 
 ```c#
 public class MongoDBCtrl : MonoBehaviour
@@ -179,5 +179,63 @@ public class MongoDBCtrl : MonoBehaviour
 }
 ```
 
-Search
+### name 필드를 중복 안되도록 C#에서 제한하기
 
+```c#
+public class MongoDBCtrl : MonoBehaviour
+{
+    bool db_exist(string name)
+    {
+        BsonDocument _bson = new BsonDocument { { "name", name} };
+        List<GameData> user_list = db_col.Find(_bson).ToList();
+        GameData[] user_data = user_list.ToArray();
+        if (user_data.Length == 0) return false; // 데이터가 없다면 false
+        return true;
+    }
+
+    void DB_Insert(string name, int score )
+    {
+        // MongoDB 내에서 name필드에 중복이 있는지 검사
+        if (db_exist(name))
+        {
+            Debug.Log("Name is Exist : " + name);
+            return;
+        }
+
+        GameData _GameData = new GameData(); // 빈 데이터
+        _GameData.name = name;
+        _GameData.score = score;
+
+        db_col.InsertOne(_GameData);
+    }
+}
+```
+
+![image](https://user-images.githubusercontent.com/110334366/188057535-15c0a5c4-58c8-4cf0-b37a-6586f92ac3c8.png)
+
+## Search
+
+```c#
+public class MongoDBCtrl : MonoBehaviour
+{
+    void DB_All_View()
+    {
+        List<GameData> user_List = db_col.Find(user => true).ToList(); // 콜렉션을 리스트화 한다.
+        GameData[] user_Data = user_List.ToArray(); // 최적화를 위해 List 자료형 -> 배열로 변환
+        for (int i = 0; i < user_Data.Length; i++)
+        {
+            Debug.Log(
+            user_Data[i].name
+            + " : " +
+            user_Data[i].score
+            );
+        }
+    }
+}    
+```
+
+![image](https://user-images.githubusercontent.com/110334366/188055103-6753da9c-cf55-4cb6-8a39-a90b07903b51.png)
+
+![image](https://user-images.githubusercontent.com/110334366/188055042-d7b44024-9183-42ae-ac61-c5cac5808210.png)
+
+## Remove
