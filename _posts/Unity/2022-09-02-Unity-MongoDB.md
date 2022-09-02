@@ -6,6 +6,8 @@ tags:       ["Unity"]
 # pin:        true
 ---
 
+# [GitHub 내려받기](https://github.com/Ugee99/Unity-MongoDB-Test/tree/main)
+
 # MongoDB Atlas Database - Cloud DBaaS for MongoDB
 MongoDB는 자체적으로 서버를 구축해야하지만, 하위 플러그인으로 아틀라스DB를 사용하면 더 간단하게 무료(512MB)로 구축 가능하다.
 
