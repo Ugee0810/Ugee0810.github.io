@@ -7,7 +7,7 @@ tags:       ["Unity"]
 ---
 
 # MongoDB Atlas Database - Cloud DBaaS for MongoDB
-MongoDB는 자체적으로 서버를 구축해야하지만, 하위 플러그인으로 아틀라스DB를 사용하면 더 간단하게 무료로 구축 가능하다.
+MongoDB는 자체적으로 서버를 구축해야하지만, 하위 플러그인으로 아틀라스DB를 사용하면 더 간단하게 무료(512MB)로 구축 가능하다.
 
 # MongoDB 프로젝트 생성 후 구축
 ![image](https://user-images.githubusercontent.com/110334366/188042035-9d0bdd04-df1c-4f82-8dc1-ec275f07982e.png)
@@ -30,7 +30,7 @@ using MongoDB.Driver;
 const string MONGO_URI = "mongodb+srv://User:User@cluster0.lsm0ujc.mongodb.net/?retryWrites=true&w=majority";
 ```
 
-## 로그인 구현
+## ＃Get Connect(User) Info : Login
 
 ```c#
 public class MongoDBCtrl : MonoBehaviour
@@ -55,7 +55,7 @@ public class MongoDBCtrl : MonoBehaviour
 }
 ```
 
-## 데이터베이스 가져오기
+## ＃Get Database Info
 
 ```c#
 public class MongoDBCtrl : MonoBehaviour
@@ -73,7 +73,7 @@ public class MongoDBCtrl : MonoBehaviour
 }
 ```
 
-## 콜렉션 가져오기
+## ＃Get IMongoCollection<Field_Data>
 
 ```c#
 public class MongoDBCtrl : MonoBehaviour
@@ -100,71 +100,7 @@ public class GameData
 }
 ```
 
-## 전체 세팅 코드
-
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using MongoDB.Bson;
-using MongoDB.Driver;
-
-// 클라이언트 내부 -> 데이터베이스
-// 데이터베이스 내부 -> 콜렉션
-
-public class MongoDBCtrl : MonoBehaviour
-{
-    // 커넥트(User) 정보 가져오기
-    const string MONGO_URI = 
-        "mongodb+srv://User:User@cluster0.lsm0ujc.mongodb.net/?retryWrites=true&w=majority";
-
-    MongoClient client;
-
-    void DB_Login()
-    {
-        client = new MongoClient(MONGO_URI);
-    }
-
-
-    // 데이터베이스 가져오기
-    const string DATABASE_NAME =
-        "TestDB";
-
-    IMongoDatabase db;
-
-    void Get_DataBase()
-    {
-        db = client.GetDatabase(DATABASE_NAME);
-    }
-
-
-    // 이번엔 콜렉션이 하나이므로 전역변수로 가져오기(DB 안에선 여러 콜렉션이 있을 땐 내부 함수에서 가져오는걸 권장)
-    // GameData Class의 형태로 생성
-    IMongoCollection<GameData> db_col;
-
-    void Get_Collection()
-    {
-        db_col = db.GetCollection<GameData>("TestDB.TestDB.col");
-    }
-
-
-
-    private void Start()
-    {
-        DB_Login();
-        Debug.Log(client);
-
-        Get_DataBase();
-        Debug.Log(db);
-
-        Get_Collection();
-        Debug.Log(db_col);
-    }
-}
-```
-
 ## ＃Insert : 필드 추가
-
 ```c#
     void db_Insert(string name, int score)
     {
@@ -207,7 +143,6 @@ public class MongoDBCtrl : MonoBehaviour
 ![image](https://user-images.githubusercontent.com/110334366/188057535-15c0a5c4-58c8-4cf0-b37a-6586f92ac3c8.png)
 
 ## ＃Search : 필드 검색
-
 ```c#
     void DB_All_View()
     {
@@ -240,7 +175,6 @@ public class MongoDBCtrl : MonoBehaviour
 ![image](https://user-images.githubusercontent.com/110334366/188055042-d7b44024-9183-42ae-ac61-c5cac5808210.png)
 
 ## ＃Remove : 필드 삭제
-
 사용 시 주의할 점 : Undo기능이 없으므로 신중하게 삭제해야 한다.
 
 (보통의 서비스들은 1년의 복구기간을 준다. 하지만 이건 아님)
@@ -275,7 +209,6 @@ public class MongoDBCtrl : MonoBehaviour
 ```
 
 ## ＃Update : 필드 갱신
-
 ```c#
     void DB_Update(string name, int score)
     {
@@ -286,7 +219,7 @@ public class MongoDBCtrl : MonoBehaviour
     }
 ```
 
-# ＃전체 코드
+# 전체 코드
 ## ＃MongoDBCtrl.cs
 ```c#
 /// <summary>
