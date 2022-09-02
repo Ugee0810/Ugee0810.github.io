@@ -12,7 +12,7 @@ MongoDB는 자체적으로 서버를 구축해야하지만, 하위 플러그인�
 # MongoDB 프로젝트 생성 후 구축
 ![image](https://user-images.githubusercontent.com/110334366/188042035-9d0bdd04-df1c-4f82-8dc1-ec275f07982e.png)
 
-# Setup in Unity
+# MongoDB in Unity
 다운 받은 MongoDB Plugin을 에셋 폴더에 Import한다.
 
 'MongoDBCtrl.cs' 생성 후 선언
@@ -31,6 +31,7 @@ const string MONGO_URI = "mongodb+srv://User:User@cluster0.lsm0ujc.mongodb.net/?
 ```
 
 로그인 구현
+
 ```c#
 public class MongoDBCtrl : MonoBehaviour
 {
@@ -53,3 +54,130 @@ public class MongoDBCtrl : MonoBehaviour
     }
 }
 ```
+
+데이터베이스 가져오기
+
+```c#
+public class MongoDBCtrl : MonoBehaviour
+{
+    // 데이터베이스 가져오기
+    const string DATABASE_NAME =
+        "TestDB";
+
+    IMongoDatabase db;
+
+    void Get_DataBase()
+    {
+        db = client.GetDatabase(DATABASE_NAME);
+    }
+}
+```
+
+콜렉션 가져오기
+
+```c#
+public class MongoDBCtrl : MonoBehaviour
+{
+    // 이번엔 콜렉션이 하나이므로 전역변수로 가져오기(DB 안에선 여러 콜렉션이 있을 땐 내부 함수에서 가져오는걸 권장)
+    // GameData Class의 형태로 생성
+
+    IMongoCollection<GameData> db_col;
+
+    void Get_Collection()
+    {
+        db_col = db.GetCollection<GameData>("TestDB.TestDB.col");
+    }
+}
+```
+
+```c#
+// GameData.cs - 구조체로 콜렉션의 내용을 추가
+public class GameData
+{
+    // MongoDB 내에서 관리하는 객체
+    public ObjectId id { get; set; }
+    public string name { get; set; }
+}
+```
+
+## 전체 세팅 코드
+
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using MongoDB.Bson;
+using MongoDB.Driver;
+
+// 클라이언트 내부 -> 데이터베이스
+// 데이터베이스 내부 -> 콜렉션
+
+public class MongoDBCtrl : MonoBehaviour
+{
+    // 커넥트(User) 정보 가져오기
+    const string MONGO_URI = 
+        "mongodb+srv://User:User@cluster0.lsm0ujc.mongodb.net/?retryWrites=true&w=majority";
+
+    MongoClient client;
+
+    void DB_Login()
+    {
+        client = new MongoClient(MONGO_URI);
+    }
+
+
+    // 데이터베이스 가져오기
+    const string DATABASE_NAME =
+        "TestDB";
+
+    IMongoDatabase db;
+
+    void Get_DataBase()
+    {
+        db = client.GetDatabase(DATABASE_NAME);
+    }
+
+
+    // 이번엔 콜렉션이 하나이므로 전역변수로 가져오기(DB 안에선 여러 콜렉션이 있을 땐 내부 함수에서 가져오는걸 권장)
+    // GameData Class의 형태로 생성
+    IMongoCollection<GameData> db_col;
+
+    void Get_Collection()
+    {
+        db_col = db.GetCollection<GameData>("TestDB.TestDB.col");
+    }
+
+
+
+    private void Start()
+    {
+        DB_Login();
+        Debug.Log(client);
+
+        Get_DataBase();
+        Debug.Log(db);
+
+        Get_Collection();
+        Debug.Log(db_col);
+    }
+}
+```
+
+Insert
+
+```c#
+public class MongoDBCtrl : MonoBehaviour
+{
+    void db_Insert(string name, int score)
+    {
+        GameData _GameData = new GameData(); // 빈 데이터
+        _GameData.name  = name;
+        _GameData.score = score;
+
+        db_col.InsertOne(_GameData);
+    } 
+}
+```
+
+Search
+
