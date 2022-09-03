@@ -5,24 +5,125 @@ categories: ["Unity"]
 tags:       ["Unity"]
 # pin:        true
 ---
+---
 
-# 01장 유니티 엔진의 소개(생략)
-# 02장 게임 개발 준비
+![image](https://user-images.githubusercontent.com/85896566/188261890-7183879c-3e2a-4e5e-968d-57762a68f64a.png)
+
+# ※ 01장 : 유니티 엔진의 소개(생략)
+<br>
+
+---
+
+# ※ 02장 : 게임 개발 준비
 ## 이 책에서 개발할 게임 소개 및 개발 순서
+이 책을 통해 개발할 게임은 3인칭 시점 슈팅(TPS, Third Person Shooting) 게임이다.
+
+개발 순서
+1. 게임 개발 환경 설정
+2. 게임에서 사용할 리소스 내려받기 및 설치
+3. 게임의 배경이 되는 스테이지 제작
+4. 주인공의 이동 및 공격 기능 구현
+5. 적 캐릭터 생성 및 추적 기능 구현
+6. 주인공과 적 캐릭터 간의 공격 및 피격 기능 구현
+7. 게임 매니저 및 오브젝트 풀링 구현
+
 ## 프로젝트 생성
+유니티 허브
+- 새 프로젝트 생성 : 3D / SpaceShooter
+- 기존 프로젝트 관리
+- 유니티 라이센스 등록
+
+유니티 버전
+- Unity 2021.3.9f1(LTS)
+
 ## 유니티 에디터의 환경설정
 ### 레이아웃
+![image](https://user-images.githubusercontent.com/85896566/188261465-37a8c1c0-7a0b-40ef-b0c6-3e4e7f5b8d37.png)
+
+내가 사용하는 커스텀이다.
+
+프로젝트와 하이러키, 인스펙터 이동 동선이 가까워서 좋다.
+
 ### 프로젝트 뷰의 칼럼
+![image](https://user-images.githubusercontent.com/85896566/188261570-0866032f-f0e5-4a3e-bb9b-e9b8815d5c45.png)
+
+보통 'One Column Layout'를 사용한다.
+
+Sprite나 Metarial 등을 볼 땐 'Two Column Layout'이 편했다.
+
 ## 프로젝트 뷰의 체계적인 관리
+프로젝트 뷰는 게임 개발에 사용하는 모든 리소스가 저장되는 곳이므로, 개발을 진행할수록 많은 리소스가 쌓이므로 혼란이 생긴다. 그러므로 처음부터 체계적으로 관리하는 게 중요하다.
+
+![image](https://user-images.githubusercontent.com/85896566/188261764-c890fb5e-f716-4f08-b1bc-e1200d18b1cc.png)
+
 ## 캐릭터 모델 임포트하기
+이 책에선 MADFINGER Games - ShadowGun:Deadzone 게임의 에셋을 사용한다.
+
+- [깃허브 저장소에서 내려받기](https://github.com/indieGameMaker/UnityBook)
+
 ### 유니티 패키지를 통한 리소스 설치
-## 에셋 스토어
+![image](https://user-images.githubusercontent.com/85896566/188262072-98dac32d-7b10-4b91-9717-11b141d944df.png)
+
+프로젝트 뷰에 드래그 & 드랍으로 패키지를 임포트한다.
+
+## Asset Store
+에셋 스토어는 다양한 리소스를 사고팔 수 있는 오픈마켓이다.
+
+※ 라이센스를 주의하며 설치할 것
+
+![image](https://user-images.githubusercontent.com/85896566/188262160-22845a88-aed5-47ca-aa6b-ffea6b9f7810.png)
+
 ### 무료 리소스 내려받기
+설치 목록
+- Yughues Free Metal Materials
+- Skybox Volume 2 (Nebula)
+- Barrel
+
+![image](https://user-images.githubusercontent.com/85896566/188262190-c06a8d52-9a8c-4714-9068-34401e848f95.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188262271-4fb6d3b6-1069-47e0-8a8f-e42cdb727602.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188262305-f60fe45a-a698-4a0f-ac74-36671a14abf7.png)
+
+이후 패키지 매니저에서 내려 받기
+
 ## 정리
-# 03장 게임 스테이지 제작
+게임 개발에 필요한 여러 가지 에셋을 설치했다.
+
+유니티의 장점 중 하나인 에셋 스토어에서는 많은 무료 에셋을 제공한다.
+
+![image](https://user-images.githubusercontent.com/85896566/188262620-aded7a34-65fb-4290-82d6-f14f830c6b27.png)
+
+<br>
+
+---
+
+# ※ 03장 : 게임 스테이지 제작
 ## 바닥 생성 및 배치
+게임의 배경이 도는 스테이지를 제작할 때 먼저 작업하는 것 중 하나가 바로 바닥인 Floor다.
+
+보통 유니티에서 제공하는 원시 모델(Primitive Model) 중 Plane 또는 Cube를 사용한다.
+
+트랜스폼 스케일 값 1단위는 1m로 디자인 되어있다.
+
+※ 오브젝트를 생성하면 항상 포지션 값을 확인 후 리셋하는 습관을 기른다.
+
+아래의 설정을 하면 자동으로 월드 좌표 원점으로 설정해준다.
+
+![image](https://user-images.githubusercontent.com/85896566/188262916-49434042-7d39-404a-bca5-644fefa5feeb.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188263017-67cda7ef-4090-4c13-9bdf-dfa70790ad78.png)
+
 ## 텍스처
+텍스처(Texture)란 3D 모델의 표면에 매핑시킬 이미지 파일을 지칭한다.
+
+텍스처의 크기는 가로 세로가 2ⁿ(예: 256x256, 1024x1024) 형태일 때 압축을 지원하며, 속도가 가장 빠름
+
+특히 모바일 플랫폼에서 속도를 향상시키고 싶다면 반드시 2ⁿ(POT, Power Of Two) 형태의 텍스처를 사용해야 한다.
+
 ### 텍스처의 해상도 조절
+
+
 ## 머티리얼
 ### 머티리얼의 자동 적용
 ### 머티리얼 생성
@@ -59,7 +160,11 @@ tags:       ["Unity"]
 ### 프로시저럴 스카이박스
 ### 큐브맵 스카이박스
 ## 정리
-# 04장 주인공 캐릭터 제작
+<br>
+
+---
+
+# ※ 04장 : 주인공 캐릭터 제작
 ## 3D 모델 불러오기
 ## 유니티 엔진의 개발 방식
 ### 컴포넌트 기반의 개발 방식
@@ -102,7 +207,11 @@ tags:       ["Unity"]
 ### Vector3.SmoothDamp
 ### Target Offset 적용
 ## 정리
-# 05장 총 발사 로직
+<br>
+
+---
+
+# ※ 05장 : 총 발사 로직
 ## 총알 모델 준비
 ## Rigidbody Component
 ## Physics Manager(물리 엔진 속성 설정)
@@ -148,7 +257,11 @@ tags:       ["Unity"]
 ### MuzzleFlash의 텍스처 오프셋 변경
 ### 코루틴의 응용 - 임계치
 ## 정리
-# 06장 적 캐릭터 제작
+<br>
+
+---
+
+# ※ 06장 : 적 캐릭터 제작
 ## 유한 상태 머신의 정의
 ## 메카님
 ### 적 캐릭터 3D 모델 임포트
@@ -182,7 +295,11 @@ tags:       ["Unity"]
 ## 몬스터의 사망 처리
 ### Root Transform Position
 ## 정리
-# 07장 유니티 UI 시스템
+<br>
+
+---
+
+# ※ 07장 : 유니티 UI 시스템
 ## 유니티 UI 구현 형태
 ### IMGUI
 ### UI Toolkit
@@ -224,7 +341,11 @@ tags:       ["Unity"]
 ### KS X 1001 규격의 한글 2350자
 ## 생명 게이지 구현
 ## 정리
-# 08장 게임 매니저
+<br>
+
+---
+
+# ※ 08장 : 게임 매니저
 ## 적 캐릭터의 출현 로직
 ### SpawnPointGroup 생성
 ### GameManager 객체 생성
@@ -234,12 +355,20 @@ tags:       ["Unity"]
 ## 스코어 UI 구현
 ### Playerprefs를 활용한 스코어 저장
 ## 정리
-# 09장 레이캐스트 활용
+<br>
+
+---
+
+# ※ 09장 : 레이캐스트 활용
 ## 레이캐스트
 ### DrawRay
 ### Raycast, RaycastHit
 ## 정리
-# 10장 내비게이션 고급 기법
+<br>
+
+---
+
+# ※ 10장 : 내비게이션 고급 기법
 ## 동적 장애물
 ### NavMeshObstacle Component
 ## Off Mesh Link Generation
@@ -248,7 +377,11 @@ tags:       ["Unity"]
 ## Area Mask의 활용
 ### 경로의 가중치
 ## 정리
-# 11장 라이트매핑 및 라이트 프로브
+<br>
+
+---
+
+# ※ 11장 : 라이트매핑 및 라이트 프로브
 ## 전역 조명
 ## 조명 모드
 ### Realtime 모드
@@ -267,12 +400,20 @@ tags:       ["Unity"]
 ### Light Probe Group
 ### Anchor Override
 ## 정리
-# 12장 씬 관리
+<br>
+
+---
+
+# ※ 12장 : 씬 관리
 ## Scene 분리
 ## Scene 병합
 ## Multi Scene Edit
 ## 정리
-# 13장 오클루전 컬링
+<br>
+
+---
+
+# ※ 13장 : 오클루전 컬링
 ## 컬링 방식
 ### 프리스텀 컬링
 ### 거리 비례에 의한 컬링
@@ -280,7 +421,11 @@ tags:       ["Unity"]
 ## 오클루전 컬링 실습
 ### Occluder Static, Occludee Static
 ## 정리
-# 14장 Input System
+<br>
+
+---
+
+# ※ 14장 : Input System
 ## 레거시 Input 클래스
 ## 새로운 Input System의 특징
 ### Input System의 구조
@@ -303,4 +448,8 @@ tags:       ["Unity"]
 ### Direct Binding
 ## Input Debug
 ## 정리
-# 15장 포톤 클라우드를 활용한 네트워크 게임
+<br>
+
+---
+
+# ※ 15장 : 포톤 클라우드를 활용한 네트워크 게임
