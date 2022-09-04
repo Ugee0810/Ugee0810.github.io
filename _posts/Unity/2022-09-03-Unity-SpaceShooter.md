@@ -216,10 +216,10 @@ Secondary Maps 섹션은 3D 모델의 특정 부분을 좀 더 세밀하게 표�
 
 2017년 부터 공개된 물리 기반 셰이딩(PBS, Physically-Based Shading)은 물체가 가진 고유의 특성에 맞게 재질을 표현하는 것으로, 현실세계에 존재하는 돌, 나무, 유리, 플라스틱, 금속 등과 같은 재질감을 하난의 셰이더에서 표현할 수 있게 설계돼 있다.
 
-Metallic Value Charts
+- Metallic Value Charts
 ![image](https://user-images.githubusercontent.com/85896566/188292824-2d081fd5-1b22-486e-891e-089ba859efc7.png)
 
-Specular Value Charts
+- Specular Value Charts
 ![image](https://user-images.githubusercontent.com/85896566/188292826-ee8fe37b-657c-451b-b9e7-2136987a459b.png)
 
 유니티의 Standard Shader의 몇 가지 중요한 Matarial Parameters는 다음과 같다.
