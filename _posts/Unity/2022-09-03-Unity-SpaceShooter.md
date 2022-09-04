@@ -475,6 +475,8 @@ Main Color, Specular Color, Shininess 등의 속성을 수정해 재질감을 �
 ---
 
 # ※ 04장 : 주인공 캐릭터 제작
+
+
 ## 3D 모델 불러오기
 ## 유니티 엔진의 개발 방식
 ### 컴포넌트 기반의 개발 방식
@@ -768,7 +770,7 @@ Main Color, Specular Color, Shininess 등의 속성을 수정해 재질감을 �
 ### Direct Binding
 ## Input Debug
 ## 정리
-
+  
 <br>
 
 ---
