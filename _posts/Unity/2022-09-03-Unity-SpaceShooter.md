@@ -140,6 +140,7 @@ Sprite나 Metarial 등을 볼 땐 'Two Column Layout'이 편했다.
 
 1.드래그 & 드랍
 - 적용 시 자동으로 "Matarials" 폴더 생성
+
 ![image](https://user-images.githubusercontent.com/85896566/188292237-015ab30f-6784-45dc-9c9f-8e6288de1760.png)
 - 텍스처와 머티리얼이 여러 폴더에 산재
 - 텍스처가 어떤 절차를 걸쳐서 메시에 연결되는지 명확히 알아야하므로 초보자에겐 권장하지 않음
@@ -147,6 +148,7 @@ Sprite나 Metarial 등을 볼 땐 'Two Column Layout'이 편했다.
 ### 머티리얼 생성
 2.텍스처 슬롯 바로 옆에 있는 브라우저 버튼을 클릭해 직접 선택
 - "Matarials" 폴더를 만들고, 아래의 절차대로 머티리얼을 생성한다.
+
 ![image](https://user-images.githubusercontent.com/85896566/188292281-ad2bfd11-8aea-45b2-9120-01f7d81ec296.png)
 - 머티리얼의 작명 방법은 개발자들마다 다른데, "m", "mt"와 같은 Prefix나 Postfix를 붙이기도 한다.
 
@@ -163,6 +165,7 @@ Sprite나 Metarial 등을 볼 땐 'Two Column Layout'이 편했다.
 ※ 완성된 머티리얼을 적용하는 방법 또한 두 가지가 있다.
 - 하이러키의 객체나, 씬 뷰에 배치된 객체에게 오브젝트 뷰에서 드래그 & 드랍
 - 적용할 객체를 선택한 후 인스펙터에서 Matarials 속성에 드래그 & 드랍
+
 ![image](https://user-images.githubusercontent.com/85896566/188292505-a404abea-382a-492e-9b97-71846e98390a.png)
 
 #### TIP - Mesh Filter, Mesh Renderer Component
@@ -259,6 +262,7 @@ Detail Mask는 Secondary Maps에 적용할 마스크를 설정하는 텍스처 �
 #### Info - Standard Shader 세부 정보
 유니티의 Standard Shader에 대한 세부 정보는 Unity Documents에서 볼 수 있다.
 - [Unity Documents](https://docs.unity3d.com/kr/current/Manual/shader-StandardShader.html)
+
 ![image](https://user-images.githubusercontent.com/85896566/188293296-4733085e-90b3-4bd2-b43e-d83e0e4fb071.png)
 
 ## 프리팹
