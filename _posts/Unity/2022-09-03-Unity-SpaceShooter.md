@@ -114,32 +114,153 @@ Sprite나 Metarial 등을 볼 땐 'Two Column Layout'이 편했다.
 
 ![image](https://user-images.githubusercontent.com/85896566/188263017-67cda7ef-4090-4c13-9bdf-dfa70790ad78.png)
 
-## 텍스처
+## Texture(텍스처)
 텍스처(Texture)란 3D 모델의 표면에 매핑시킬 이미지 파일을 지칭한다.
 
-텍스처의 크기는 가로 세로가 2ⁿ(예: 256x256, 1024x1024) 형태일 때 압축을 지원하며, 속도가 가장 빠름
+텍스처의 크기는 가로 세로가 2ⁿ(예: 256x256, 1024x1024) 형태일 때 압축을 지원하며, 속도가 가장 빠르다.
 
 특히 모바일 플랫폼에서 속도를 향상시키고 싶다면 반드시 2ⁿ(POT, Power Of Two) 형태의 텍스처를 사용해야 한다.
 
 ### 텍스처의 해상도 조절
+![image](https://user-images.githubusercontent.com/85896566/188291697-887b7984-075d-4ac0-8f0f-bb5dcb948d5f.png)
 
+- 해상도를 줄일 수록 용량이 크게 줄어든다.
+- 프로젝트를 진행할 때 대상 플랫폼을 명확히 설정하고 임포트한 텍스처의 품질을 어떻게 관리할 것인지 미리 결정해야 한다.
+- 따라서 프로젝트 진행 중 임포트한 텍스처는 바로 적절한 품질로 설정하는 작업을 병행해야 최적화 작업이 수월하다.
 
-## 머티리얼
+## Material(머티리얼)
+3D 모델에 텍스처를 적용하려면 3D 모델과 텍스처 사이에 반드시 Metarial이 필요하다.
+
+머티리얼은 3D 모델에 적용할 텍스처의 다양한 속성을 설정하는 역할을 한다.
+
+즉, "어떤 텍스처를, 어떤 간격으로 반복하고, 표면의 재질은 어떻게 표현하느냐" 등의 속성을 설정한다.
+
 ### 머티리얼의 자동 적용
+※ 객체에 텍스처를 적용하는 방법은 두 가지가 있다.
+
+1. 드래그 & 드랍
+- 적용 시 자동으로 "Matarials" 폴더 생성
+![image](https://user-images.githubusercontent.com/85896566/188292237-015ab30f-6784-45dc-9c9f-8e6288de1760.png)
+- 텍스처와 머티리얼이 여러 폴더에 산재
+- 텍스처가 어떤 절차를 걸쳐서 메시에 연결되는지 명확히 알아야하므로 초보자에겐 권장하지 않음
+
 ### 머티리얼 생성
+2. 텍스처 슬롯 바로 옆에 있는 브라우저 버튼을 클릭해 직접 선택
+- "Matarials" 폴더를 만들고, 아래의 절차대로 머티리얼을 생성한다.
+![image](https://user-images.githubusercontent.com/85896566/188292281-ad2bfd11-8aea-45b2-9120-01f7d81ec296.png)
+- 머티리얼의 작명 방법은 개발자들마다 다른데, "m", "mt"와 같은 Prefix나 Postfix를 붙이기도 한다.
+
 ### Albedo, Normal Map 적용
+드래그 & 드랍 또는 브라우저 버튼을 클릭하여 Albedo와 Normal Map에 연결해준다.
+
+![image](https://user-images.githubusercontent.com/85896566/188292384-ec7cdf33-e35c-4ed5-abd0-c57dfc7718e5.png)
+
+브라우저 버튼 왼쪽 네모 칸을 Ctrl+Click 하면 프리뷰를 볼 수 있다.
+
+![image](https://user-images.githubusercontent.com/85896566/188292427-e01e9b36-c631-4686-abf4-b01c0f253b46.png)
+
 ### 머티리얼 적용 방법
+※ 완성된 머티리얼을 적용하는 방법 또한 두 가지가 있다.
+- 하이러키의 객체나, 씬 뷰에 배치된 객체에게 오브젝트 뷰에서 드래그 & 드랍
+- 적용할 객체를 선택한 후 인스펙터에서 Matarials 속성에 드래그 & 드랍
+![image](https://user-images.githubusercontent.com/85896566/188292505-a404abea-382a-492e-9b97-71846e98390a.png)
+
+#### TIP - Mesh Filter, Mesh Renderer Component
+애니메이션이 적용되지 않은 3D 모델은 반드시 메쉬 필터와 메쉬 렌더러 컴포넌트가 있다.
+
+Mesh Filter
+- 해당 모델의 3차원 형상 정보인 메시 데이터를 가지고 있다.
+
+Mesh Renderer
+- Mesh Filter의 메시 데이터를 기반으로 화면에 렌더링을 처리한다.
+
+또한 유니티에서 제공하는 "~ Renderer" 계열의 컴포넌트는 반드시 Materials 속성이 있다.
+
+이는 텍스처 정보를 가진 머티리얼을 연결하는 속성임을 의미한다.
+
 ### 타일링 속성
+머티리얼의 기능 가운데 텍스처를 욕실의 타일처럼 반복시키는 기능이 있다.
+
+인스펙터 뷰에 Tiling 속성의 X, Y값의 n당 n번 패턴 반복화 한다는 것이다.
+
+![image](https://user-images.githubusercontent.com/85896566/188292619-d0800ebf-31bd-4c2b-bbd6-ae4f7b8c082a.png)
+
+#### TIP - Main Maps, Secondary Maps
+Secondary Maps 섹션의 속성값을 변경 했다가 변화가 없다고 혼동하지 않도록 유의.
+
+Secondary Maps 섹션은 3D 모델의 특정 부분을 좀 더 세밀하게 표현하기 위한 텍스처를 적용하는 영역이다.
+
+![image](https://user-images.githubusercontent.com/85896566/188292645-331aafa8-a153-4411-9844-5ea236d943b0.png)
+
 ### 프리뷰의 다양한 기능
-## 셰이더 및 물리 기반 셰이딩
+![image](https://user-images.githubusercontent.com/85896566/188292708-5df2f833-3b66-47f9-80d6-f3fc0db1b25a.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188292780-7b02de90-f796-4e33-b492-8936e2b8c366.png)
+
+- 확대, 최소화 가능
+- 구체 뿐만 아니라 다양한 물체로 적용된 모습을 볼 수 있다.
+- 광원의 유/무에 따른 모습
+- 3점(케밥 메뉴)에선 별도의 윈도우 창으로 분리해 볼 수 있다.
+
+## Shader(셰이더) 및 PBS(물리 기반 셰이딩)
+셰이더는 렌더링할 때 픽셀의 농담, 색조, 명암을 결정하는 프로그래밍 방식을 말한다.
+
+쉽게 표현하면, 화면에 텍스처를 표현할 때 재질감 또는 효과를 표현하는 기능이다.
+
+셰이더 프로그래밍은 DirectX, OpenGL에 따라 서로 다른 언어로 구현되고 3D 그래픽스의 이론적인 배경을 많이 알아야 할 정도로 깊이 있는 지식을 요구하는 분야이다.
+
+유니티는 셰이더 프로그래밍 지식이나 경험이 없더라도 내장 셰이더(Built in Shader)를 제공해줘 손쉽게 사용할 수 있다.
+
+2017년 부터 공개된 물리 기반 셰이딩(PBS, Physically-Based Shading)은 물체가 가진 고유의 특성에 맞게 재질을 표현하는 것으로, 현실세계에 존재하는 돌, 나무, 유리, 플라스틱, 금속 등과 같은 재질감을 하난의 셰이더에서 표현할 수 있게 설계돼 있다.
+
+Metallic Value Charts
+![image](https://user-images.githubusercontent.com/85896566/188292824-2d081fd5-1b22-486e-891e-089ba859efc7.png)
+
+Specular Value Charts
+![image](https://user-images.githubusercontent.com/85896566/188292826-ee8fe37b-657c-451b-b9e7-2136987a459b.png)
+
+유니티의 Standard Shader의 몇 가지 중요한 Matarial Parameters는 다음과 같다.
+
 ### 렌더링 모드
-### 알베도
-### 메탈릭 속성
-### 노멀 맵
-### 하이트 맵
-### 오클루전
-### 이미션
-### 디테일 마스크
+![image](https://user-images.githubusercontent.com/85896566/188293024-217d63fd-f45b-42ac-8620-59d75a9520c2.png)
+
+|Rendering Mode 옵션|설명|
+|------|---|
+|Opaque(불투명)|기본값으로 불투명한 텍스처를 표현하는 옵션이다. 투명한 부분이 전혀 없는 Solid 객체에 적합하다.|
+|Cutout(그물망 표현)|불투명한 부분과 투명한 부분을 동시에 표현하는 옵션이다. 주로 풀, 그물망 등을 표현할 떄 적합하다.|
+|Fade(홀로그램 효과)|투명 속성값을 가진 객체를 페이드 아웃시키는 옵션으로, 페이드 인/아웃을 애니메이션 처리할 수 있다. 불투명한 객체를 부분적으로 페이드 아웃시킬 수 있어 홀로그램 효과를 구현할 수 있다.|
+|Transparent(투명)|투명한 플라스틱 또는 유리와 같은 재질을 표현하는 옵션이다.|
+
+### Albedo(알베도)
+Albedo는 빛을 반사하는 정도를 말하며, 반사율이라고도 한다.
+
+일반적으로 가장 기본이 되는 텍스처를 연결하는 속성이다.
+
+### Metallic(메탈릭)
+Metallic은 객체 표면에 금속의 재질을 표현하기 위한 텍스처다.
+
+슬라이드가 1에 가까워질수록 금속 재질에 가까워진다.
+
+### Normal Map(노멀 맵)
+Normal Map은 표면의 세밀한 입체감이나 질감을 표현하기 위한 텍스처의 일종으로 3D 모델링으로 많은 Polygon을 소모하지 않고 같은 효과를 낼 수 있다. 수치가 커질수록 거친 음영효과를 낸다.
+
+### Height Map(하이트 맵)
+Height Map은 텍스처로 높낮이를 표현하는 것으로, 노멀 맵과 비슷한 기능을 하지만, 좀 더 돌출시켜 뒤에 있는 사물을 가리는 Occlusion 효과를 낼 수 있다. 슬라이더로 돌출되는 높이를 설정할 수 있다.
+
+### Occlusion(오클루전)
+Occlusion은 흑백의 텍스처로 간접조명에 의해 생기는 명암을 더욱 뚜렷이 표시해 사물의 입체감과 깊이감을 살리는 데 사용한다. Occlusion에 사용할 텍스처는 일반적으로 3D 모델링 툴 또는 서드파티 툴에서 추출한다.
+
+### Emission(이미션)
+Emission은 스스로 빛을 방출하는 속성을 말한다. 속성값을 변경하면 객체의 표면에서 방출되는 빛의 강도와 빛의 색상을 설정할 수 있는 항목이 나타난다. 또한 하단에 전역 조명에 반영하기 위한 옵션이 나타난다.
+
+### Detail Mask(디테일 마스크)
+Detail Mask는 Secondary Maps에 적용할 마스크를 설정하는 텍스처 슬롯이다. 특정 부분만 좀 더 세부적인 텍스처를 표현할 때 사용한다.
+
+#### Info - Standard Shader 세부 정보
+유니티의 Standard Shader에 대한 세부 정보는 Unity Documents에서 볼 수 있다.
+- [Unity Documents](https://docs.unity3d.com/kr/current/Manual/shader-StandardShader.html)
+![image](https://user-images.githubusercontent.com/85896566/188293296-4733085e-90b3-4bd2-b43e-d83e0e4fb071.png)
+
 ## 프리팹
 ### 네스티드 프리팹
 ### 벽 만들기
