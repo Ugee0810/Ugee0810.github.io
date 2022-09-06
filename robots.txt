@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ugee99.github.io/sitemap.xml
+Sitemap: https://ugee0810.github.io/sitemap.xml
