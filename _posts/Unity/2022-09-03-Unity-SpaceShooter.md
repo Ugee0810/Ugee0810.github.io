@@ -1299,7 +1299,7 @@ public class FollowCam : MonoBehaviour
                       + (Vector3.up * height);
 
         // Camera를 피벗 좌표를 향해 회전
-        camTr.LookAt(targetTr.position + (targetTr.up * targetOffset));
+        camTr.LookAt(targetTr.position + (targetTr.up));
     }
 }
 ```
@@ -1385,7 +1385,7 @@ public class FollowCam : MonoBehaviour
                                       Time.deltaTime * damping); // 시간 t
 
         // Camera를 피벗 좌표를 향해 회전
-        camTr.LookAt(targetTr.position + (targetTr.up * targetOffset));
+        camTr.LookAt(targetTr.position + (targetTr.up));
     }
 }
 ```
@@ -1393,10 +1393,155 @@ public class FollowCam : MonoBehaviour
 변경한 코드는 카메라가 이동할 목표 위치를 변수에 저장한 후 Slerp()를 이용해 점진적으로 이동시킨다. 실행해보면 처음 작성했던 코드보다 부드러워진 것을 확인할 수 있다.
 
 ### Vector3.SmoothDamp
+부드럽게 이동시키는 방법 중 Vector3.SmoothDamp() 함수를 이용하는 방법도 있다. 보통 카메라의 Follow 로직에 많이 사용되며 사용법은 다음과 같다.
 
+```c#
+Vector3.SmoothDamp(Vector3 current,
+                   Vector3 target,
+                   ref Vector3 currentVelocity,
+                   float smoothTime,
+                   float maxSpeed,
+                   float deltaTime);
+```
+
+|매개 변수|설명|
+|---|---|
+|current|시작 위치|
+|target|목표 위치|
+|currentVelocity|현재 속도|
+|smoothTime|목표 위치까지의 도달 시간|
+|maxSpeed|최대 속력 제한 값(기본값: 무한대 Mathf.Infinity), 생략 가능|
+|deltaTime|프레임 보정을 위한 델타 타임(기본값: Time.deltaTime), 생략 가능|
+
+앞서 작성한 코드에서 구면 선형 보간을 사용한 부분은 주석 처리하고 다음과 같이 수정한다.
+
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FollowCam : MonoBehaviour
+{
+    // 따라가야 할 대상을 연결할 변수
+    public Transform targetTr;
+    // Main Camera 자신의 Transform 컴포넌트
+    private Transform camTr;
+
+    // 따라갈 대상으로부터 떨어질 거리
+    [Range(2.0f, 20.0f)]
+    public float distance = 10.0f;
+
+    // Y축으로 이동할 높이
+    [Range(0.0f, 10.0f)]
+    public float height = 2.0f;
+
+    // 반응 속도
+    public float damping = 10.0f;
+
+    // SmoothDamp에서 사용할 변수
+    private Vector3 velocity = Vector3.zero;
+
+    void Start()
+    {
+        // Main Camera 자신의 Transform 컴포넌트를 추출
+        camTr = GetComponent<Transform>();
+    }
+
+    void LateUpdate()
+    {
+        // 추적해야 할 대상의 뒤쪽으로 distance만큼 이동
+        // 높이를 height만큼 이동
+        Vector3 pos = targetTr.position
+                      + (-targetTr.forward * distance)
+                      + (Vector3.up * height);
+
+        // 구면 선형 보간함수를 사용해 부드럽게 위치를 변경
+        // camTr.position = Vector3.Slerp(camTr.position,           // 시작 위치
+        //                               pos,                       // 목표 위치
+        //                               Time.deltaTime * damping); // 시간 t
+
+        // SmoothDamp을 이용한 위치 보간
+        camTr.position = Vector3.SmoothDamp(camTr.position, // 시작 위치
+                                            pos,            // 목표 위치
+                                            ref velocity,   // 현재 속도
+                                            damping);       // 목표 위치까지 도달할 시간
+
+        // Camera를 피벗 좌표를 향해 회전
+        camTr.LookAt(targetTr.position + (targetTr.up));
+    }
+}
+```
+
+Damping 속성을 0.1로 변경하고 테스트해보면 구면 선형 보간 로직에 사용했던 Damping 변수는 값이 클수록 반응 속도가 빨랐지만 SmoothDamp에서는 목표 지점까지 이동할 때 걸리는 시간으로 사용되기 때문에 반대로 값이 작을수록 반응 속도가 빨라진다.
 
 ### Target Offset 적용
+지금까지의 코드를 플레이해보면 주인공 캐릭터가 중앙에 위치해 전반 시야가 매우 좁다. 이것은 FollowCam.cs에서 메인 카메라가 플레이어를 향해 LookAt 처리를 해서 플레이어의 피벗 좌표를 바라보기 때문이다. 따라서 LookAt 좌표를 조정해서 전방 시야를 확보해보자.
 
+스크립트를 다음과 같이 수정한다.
+
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FollowCam : MonoBehaviour
+{
+    // 따라가야 할 대상을 연결할 변수
+    public Transform targetTr;
+    // Main Camera 자신의 Transform 컴포넌트
+    private Transform camTr;
+
+    // 따라갈 대상으로부터 떨어질 거리
+    [Range(2.0f, 20.0f)]
+    public float distance = 10.0f;
+
+    // Y축으로 이동할 높이
+    [Range(0.0f, 10.0f)]
+    public float height = 2.0f;
+
+    // 반응 속도
+    public float damping = 10.0f;
+
+    // 카메라 LookAt의 Offset 값
+    public float targetOffset = 2.0f;
+
+    // SmoothDamp에서 사용할 변수
+    private Vector3 velocity = Vector3.zero;
+
+    void Start()
+    {
+        // Main Camera 자신의 Transform 컴포넌트를 추출
+        camTr = GetComponent<Transform>();
+    }
+
+    void LateUpdate()
+    {
+        // 추적해야 할 대상의 뒤쪽으로 distance만큼 이동
+        // 높이를 height만큼 이동
+        Vector3 pos = targetTr.position
+                      + (-targetTr.forward * distance)
+                      + (Vector3.up * height);
+
+        // 구면 선형 보간함수를 사용해 부드럽게 위치를 변경
+        // camTr.position = Vector3.Slerp(camTr.position,           // 시작 위치
+        //                               pos,                       // 목표 위치
+        //                               Time.deltaTime * damping); // 시간 t
+
+        // SmoothDamp을 이용한 위치 보간
+        camTr.position = Vector3.SmoothDamp(camTr.position, // 시작 위치
+                                            pos,            // 목표 위치
+                                            ref velocity,   // 현재 속도
+                                            damping);       // 목표 위치까지 도달할 시간
+
+        // Camera를 피벗 좌표를 향해 회전
+        camTr.LookAt(targetTr.position + (targetTr.up * targetOffset));
+    }
+}
+```
+
+실행한 화면이다. 카메라가 플레이어를 향해 다가오고, 캐릭터가 화면 아래쪽에 배치되고 전방 시야가 확보됐다.
+
+![image](https://user-images.githubusercontent.com/85896566/188604709-4ca10931-d865-480f-8dbe-722d0aed5d73.png)
 
 ## 정리
 - 주인공 3D 모델 임포트
@@ -1407,6 +1552,8 @@ public class FollowCam : MonoBehaviour
 - 실시간 그림자와 모바일용 그림자 처리
 - LOD 설정
 - FollowCamera 로직 구현
+
+게임오브젝트와 컴포넌트 사이의 관계와 기본적인 이동, 회전 기능에 대한 스크립트를 작성해봤다.
 
 <br>
 
