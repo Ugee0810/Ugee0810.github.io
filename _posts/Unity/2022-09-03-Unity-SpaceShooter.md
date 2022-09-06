@@ -88,6 +88,9 @@ Sprite나 Metarial 등을 볼 땐 'Two Column Layout'이 편했다.
 이후 패키지 매니저에서 내려 받기
 
 ## 정리
+- 프로젝트 폴더 설정
+- 사용할 리소스 설치
+
 게임 개발에 필요한 여러 가지 에셋을 설치했다.
 
 유니티의 장점 중 하나인 에셋 스토어에서는 많은 무료 에셋을 제공한다.
@@ -468,6 +471,9 @@ Main Color, Specular Color, Shininess 등의 속성을 수정해 재질감을 �
 하지만 게임의 특성에 따라 카메라가 볼 수 있는 최대거리(Far clipping Plane)를 제한해야 할 때는 Sky Dome 방식을 적용하는 것은 적합하지 않을 수 있다.
 
 ## 정리
+- 스테이지 디자인
+- 스카이박스 적용
+
 이번 장에서는 게임의 무대가 되는 스테이지를 제작했다.
 
 <br>
@@ -526,42 +532,881 @@ Preferences의 [External Tools] 섹션의 External Script Editor에서 서드파
 - [바로가기](https://code.visualstudio.com/docs/other/unity)
 
 ### C# 스크립트 생성
+프로젝트 뷰 우클릭 [Create] -> [C# Script] 선택
 
+스크립트 네임은 클래스명이 된다.
 
-### 유니티의 주요 이벤트 함수
+프로젝트 뷰의 스크립트 파일 이름을 변경하면 클래스명은 수동으로 변경해주어야 컴파일 에러가 나지 않는다.
+
+![image](https://user-images.githubusercontent.com/85896566/188548878-6e37fdfa-95bd-4ecb-868a-9636e63ee827.png)
+
+### 유니티의 주요 이벤트 함수(P.122)
+유니티의 생명주기(Life Cycle)에 대한 내용은 본 블로그의 다른 게시물에 정리되어 있다.
+- [바로가기](https://ugee99.github.io/posts/Unity-LifeCycle/)
+
 ### 이벤트 함수의 호출 순서
+```c#
+    private void Awake()
+    {
+        // 주로 게임의 상태 값, 변수의 초기화에 사용
+        // 가장 처음 1회 실행
+        // 스크립트가 비활성화돼 있어도 실행된다.
+        // Coroutine으로 실행 불가능
+    }
+
+    private void Start()
+    {
+        // Awake() -> OnEnable() -> Start()
+        // Update함수 호출 전에 호출
+        // Coroutine으로 실행 가능
+    }
+
+    private void Update()
+    {
+        // 프레임마다 호출
+        // 호출 간격이 불규칙적임
+        // 화면의 렌더링 주기와 일치
+        // 주로 게임의 핵심 로직을 작성
+    }
+
+    private void LateUpdate()
+    {
+        // Update 함수가 종료된 후 호출
+        // 모든 Update()가 호출되고 나서 한 번씩 호출
+        // 주로 Update()에서 전처리가 끝난 후 실행해야 하는 로직에 사용
+    }
+
+    private void FixedUpdate()
+    {
+        // 일정한 간격으로 호출(Default 0.02/s)
+        // 물리 엔진의 계산 주기와 일치
+    }
+
+    private void OnEnable()
+    {
+        // 게임 오브젝트 또는 스크립트가 Enable될 때마다 호출
+        // 주로 사용자 정의 이벤트 연결에 사용
+        // Coroutine으로 실행 불가능
+    }
+    
+    private void OnDisable()
+    {
+        // 게임 오브젝트 또는 스크립트가 Disable될 때 호출
+        // 주로 이벤트 연결을 종료할 때 사용
+        // Coroutine으로 실행 불가능
+    }
+```
+
 ## 키보드 입력값 받아들이기
+유니티에서 제공하는 Input Class는 외부(키보드, 마우스, 조이패드 등)에서 들어오는 입력값을 관리하는 클래스다. InputSystem의 내용은 14장에서 따로 다룬다.
+
 ### InputManager
-### GetAxis 함수
+![image](https://user-images.githubusercontent.com/85896566/188550882-7e4b6a8a-80f3-489d-825c-b792c4475899.png)
+
+키본적으로 정의되어 있는 내용도 있고, 추가도 가능하다.
+
+### GetAxis()
+미리 설정한 키 조합의 반환값 가져오는 함수.
+
+```c#
+    private void Update()
+    {
+        float h = Input.GetAxis("Horizontal"); // -1.0f ~ 0.0f ~ +1.0f
+        float v = Input.GetAxis("Vertical");   // -1.0f ~ 0.0f ~ +1.0f 
+
+        Debug.Log("h : " + h);
+        Debug.Log("v : " + v);
+    }
+```
+
+![image](https://user-images.githubusercontent.com/85896566/188551483-3303abd6-baa4-4d1e-b441-2329bf659627.png)
+
 ### 스크립트 적용 방식
-### GetAxisRaw 함수
+- Scene View에 적용할 객체에게 스크립트를 드래그 & 드랍
+- 하이러키 뷰의 적용할 객체에게 스크립트를 드래그 & 드랍
+- 적용할 객체의 인스펙터 뷰에 스크립트를 드래그 & 드랍(권장)
+- 적용할 객체의 인스펙터 뷰에서 Add Component로 스크립트 검색
+
+#### TIP - 잘못 추가된 에셋을 찾는 방법
+![image](https://user-images.githubusercontent.com/85896566/188551938-5e9f8a02-3b51-4ca4-8b5e-83d1ef5a894f.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188551969-9497974f-190c-4586-8d80-564955b34a6a.png)
+
+스크립트 뿐만 아니라 모든 에셋(머티리얼, 프리팹, 리소스 등)도 이와 같은 방법으로 조회 가능하다.
+
+#### Info - Input에 정의되지 않은 축 이름을 사용했을 때 발생하는 오류
+![image](https://user-images.githubusercontent.com/85896566/188552232-9e13a7d6-a365-4594-ae97-080d0df640dc.png)
+
+스크립트에서 InputManager에 정의된 키 값의 이름을 문자열로 받게 되면 컴파일 에러가 발생하지 않는다.
+
+따라서 이와 같은 에러가 발생하면 대/소문자, 띄어쓰기 등을 확인할 것.
+
+### GetAxisRaw()
+Input.GetAxis("Horizontal")는 -1.0f ~ +1.0f 사이의 연속적인 값을 반환한다. 따라서 부드러운 이동이 필요할 때는 GetAxis()를 사용한다. 하지만 키보드 입력값에 따라 방향을 즉시 바꾸거나 속도를 변경해야할 땐Input.GetAxisRaw("Horizontal")를 사용해야 한다. GetAxisRaw는 불연속적인(이산, Discrete) -1.0f, 0.0f, +1.0f의 세 가지 값만 변환한다.
+
 ## 캐릭터의 이동
+유니티에서 어떤 물체를 이동시키거나 회전시키는 방법은 2가지로 분류할 수 있다.
+- 모든 게임오브젝트에 있는 Transform Component의 Position, Rotation 속성값을 변경하는 것
+- 유니티 엔진에 내장된 물리 엔진을 이용해 물리적인 힘(Force) 또는 회전력(Torque)를 가해 변경시키는 것
+
+쉽게 말해
+- Tranform Component를 이용
+- 물리 엔진(PhysX, Box2D)을 사용
+
+애니메이션으로도 이동 및 회전을 할 수 있다. 하지만 이것 역시 Transform Component의 속성값을 연속적으로 기록한 것을 재생하는 것이기 때문에 Transform Component를 이용하는 방법이다.
+
+아래의 코드는 Player - '이동 로직 추가'이다.
+
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerCtrl : MonoBehaviour
+{
+    private void Update()
+    {
+        float h = Input.GetAxis("Horizontal"); // -1.0f ~ 0.0f ~ +1.0f
+        float v = Input.GetAxis("Vertical");   // -1.0f ~ 0.0f ~ +1.0f 
+
+        // Transform Component Position 속성값 변경
+        transform.position += new Vector3(0, 0, 1);
+    }
+}
+```
+
+누적 대입 연산자로 인해 프레임마다 z축만 +1되는 코드이다.
+
 ### Vector3 구조체
-### 정규화 벡터
+유니티에서 3차원 좌표에 대한 개념을 익히려면 Vector3 구조체에 대해 알아야 한다. 이는 3차원 벡터와 좌푯값을 저장하기 위한 용도로 사용되며, 다음 코드는 Vector3 구조체의 일부분이다. 3차원 x, y, z 값이 float로 선언된 것과 방향을 지시하는 약칭(Shorthand)를 볼 수 있다.
+
+```c#
+public struct Vector3 : IEquatable<Vector3>, IFormattable
+    {
+        public const float kEpsilon = 1E-05f;
+
+        public const float kEpsilonNormalSqrt = 1E-15f;
+
+        //
+        // 요약:
+        //     X component of the vector.
+        public float x;
+
+        //
+        // 요약:
+        //     Y component of the vector.
+        public float y;
+
+        //
+        // 요약:
+        //     Z component of the vector.
+        public float z;
+
+        private static readonly Vector3 zeroVector = new Vector3(0f, 0f, 0f);
+
+        private static readonly Vector3 oneVector = new Vector3(1f, 1f, 1f);
+
+        private static readonly Vector3 upVector = new Vector3(0f, 1f, 0f);
+
+        private static readonly Vector3 downVector = new Vector3(0f, -1f, 0f);
+
+        private static readonly Vector3 leftVector = new Vector3(-1f, 0f, 0f);
+
+        private static readonly Vector3 rightVector = new Vector3(1f, 0f, 0f);
+
+        private static readonly Vector3 forwardVector = new Vector3(0f, 0f, 1f);
+
+        private static readonly Vector3 backVector = new Vector3(0f, 0f, -1f);
+        [중략...]
+```
+
+다음 표에 제시된 것은 Vector3 구조체의 여러 속성 중에서 자주 사용되는 속성이다.
+
+|속성|설명|
+|---|---|
+|magnitude|벡터의 길이(read only)|
+|normalized|크기가 1인 벡터, 정규화 벡터(read only)|
+|sqrMagnitude|벡터의 길이의 제곱(read only)|
+|x|벡터의 x 성분(3차원 공간의 x 좌표|
+|y|벡터의 y 성분(3차원 공간의 y 좌표|
+|z|벡터의 z 성분(3차원 공간의 z 좌표|
+
+### Normalized Vector(정규화 벡터)
+Vector는 크기와 방향을 나타낼 수 있는 데이터 타입으로, 그 중 각 축의 크기가 1인 벡터를 정규화 벡터(Normalized Vector)라 한다. 즉, 방향만 표시하는 벡터라고 생각하면 된다.
+
+Vector3 구조체에서 제공하는 방향을 가리키는 정규화 벡터는 다음과 같다.
+
+|Shorthand|의미|
+|---|---|
+|Vector3.forward|Vector3(0, 0, 1)|
+|Vector3.back|Vector3(0, 0, -1)|
+|Vector3.left|Vector3(-1, 0, 0)|
+|Vector3.right|Vector3(1, 0, 0)|
+|Vector3.up|Vector3(0, 1, 0)|
+|Vector3.down|Vector3(0, -1, 0)|
+|Vector3.one|Vector3(1, 1, 1)|
+|Vector3.zero|Vector3(0, 0, 0)|
+
+![image](https://user-images.githubusercontent.com/85896566/188555682-09b0c0b8-c8f6-48eb-986d-8342b5b6fcff.png)
+
+유니티는 왼손 좌표계를 사용한다.
+
+따라서 Vector3.forward가 z축 +1이라는 것을 이해할 수 있다.
+
+```c#
+    private void Update()
+    {
+        float h = Input.GetAxis("Horizontal"); // -1.0f ~ 0.0f ~ +1.0f
+        float v = Input.GetAxis("Vertical");   // -1.0f ~ 0.0f ~ +1.0f
+                                               
+        // 정규화 벡터를 사용한 코드
+        transform.position += /*전진 방향*/Vector3.forward * /*속력*/1;
+    }
+```
+
 ### 컴포넌트 캐시 처리
-### Translate 함수
+Update()의 사용엔 항상 최적화에 주의를 기울여야 한다. 조금이라도 부하가 걸리는 함수나 잘못된 로직은 피해야 한다. 특히 프레임마다 Transform Component에 접근하는 이동 방식은 바람직하지 않다.
+
+앞서 Update()내에서 Transform Component의 멤버 변수 transform을 사용했는데, 이를 미리 변수에 담아 두고 해당 변수에 접근하는 방식이 미세하지만 빠르다. 따라서 컴포넌트의 캐시 처리란 스크립트에서 접근해야 할 컴포넌트를 Awake()나 Start()에서 미리 변수에 할당한 후에 그 변수를 통해 접근하는 것을 말한다.
+
+```c#
+public class PlayerCtrl : MonoBehaviour
+{
+    Transform tr;
+
+    private void Start()
+    {
+        // Transform Component를 추출해 변수에 대입
+        tr = GetComponent<Transform>();
+    }
+    [중략...]
+}
+```
+
+#### Info - GetComponent 함수의 사용법
+```c#
+tr = GetComponent<Transform>();
+tr = GetComponent("Transform") as Transform;
+tr = (Transform)GetComponent(typeof(Transform));
+```
+
+위에 열거한 방법은 모두 같은 의미이다.
+
+또, Start()에서 tr 변수에 할당하는 구문은 아래 코드를 축약한 것이다.
+
+C#에서 this는 해당 클래스(스크립트)를 뜻함.
+
+```c#
+tr = this.gameobject.GetComponent<Transform>();
+
+"이 스크립트가 포함된 게임 오브젝트가 가진 여러 컴포넌트 중에서 Transform 컴포넌트를 추출해 tr 변수에 저장한다."
+```
+
+### Translate()
+이 함수는 게임 오브젝트의 이동 처리를 편하게 할 수 있는 함수로서, 함수의 원형은 다음과 같다.
+
+```c#
+void Translate(Vector3 direction, [Space relativeTo])
+```
+
+이 함수로 Transform Component의 Position 속성값을 계산해 이동하는 복잡한 방식의 코딩을 예방할 수 있다.
+
+Translate()의 두 번째 인자는 기준 좌표계인데, 인자를 생략하면 로컬 좌표를 기준으로 한다.
+- Space.World(월드 좌표계)
+- Space.Self(로컬 좌표계)
+
+이 함수를 이용해 수정한 PlayerCtrl 스크립트는 다음과 같다.
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerCtrl : MonoBehaviour
+{
+    // 컴포넌트 캐시 처리할 변수
+    Transform tr;
+
+    private void Start()
+    {
+        // Transform Component를 추출해 변수에 대입
+        tr = GetComponent<Transform>();
+    }
+
+    private void Update()
+    {
+        float h = Input.GetAxis("Horizontal"); // -1.0f ~ 0.0f ~ +1.0f
+        float v = Input.GetAxis("Vertical");   // -1.0f ~ 0.0f ~ +1.0f
+
+        // Translate()를 이용한 이동 로직
+        tr.Translate(Vector3.forward * 1);
+    }
+}
+```
+
 ### Time.dletaTime
+Time.dletaTime은 이전 프레임의 시작 시각부터 현재 프레임이 시작되는 시간의 차(델타)를 말한다. 쉽게 풀이하면 이전 프레임부터 현재 프레임까지 걸린 시간의 차다.
+
+Update()는 프레임에 따라 호출 되는데, 이 횟수가 기기의 성능마다 다르므로 속도가 달라지는 문제가 발생한다. 이 문제는 Time.dletaTime을 곱해주는 것으로 해결할 수 있다.
+
+30프레임은 1/30초, 60프레임은 1/60초를 해주어 프레임 레이트가 서로 다른 기기에서도 개발자가 정한 일정한 속도로 이동시킬 수 있다.
+
+```C#
+tr.Translate(Vector3.forward * Time.deltaTime * 1);
+```
+
+- Time.deltaTime을 곱하지 않으면 -> 프레임당 지정한 유닛만큼 이동
+- Time.deltaTime을 곱하면 -> 초당 지정한 유닛만큼 이동
+
+특히 Update()에 이동 및 회전 로직을 작성했다면 반드시 Time.deltaTime 속성을 사용해야 한다.
+
+```C#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerCtrl : MonoBehaviour
+{
+    // 컴포넌트 캐시 처리할 변수
+    Transform tr;
+
+    public float moveSpeed = 10.0f;
+
+    private void Start()
+    {
+        // Transform Component를 추출해 변수에 대입
+        tr = GetComponent<Transform>();
+    }
+
+    private void Update()
+    {
+        float h = Input.GetAxis("Horizontal"); // -1.0f ~ 0.0f ~ +1.0f
+        float v = Input.GetAxis("Vertical");   // -1.0f ~ 0.0f ~ +1.0f
+
+        // Translate()를 이용한 이동 로직
+           tr.Translate(v * Vector3.forward * moveSpeed * Time.deltaTime);
+        // tr.Translate({전진/후진 변수} * {이동할 방향} * {속도} * Time.deltaTime);
+    }
+}
+```
+
 ### public, private 접근 제한자
+C#에서 지원하는 접근 제한자는 public, private, protected, internal이 있다. 접근 제한자는 외부 클래스(구조체), 멤버 변수 등의 접근을 허용하는 범위를 지정한다.
+
+|접근 제한자|설명|
+|---|---|
+|public|외부 클래스(외부 스크립트)에서 접근 가능|
+|private|동일 클래스(스크립트 內)에서만 접근 가능. 외부에서는 불가능|
+|protected|private과 동일하게 외부에선 접근이 불가능하고, 상속받은 파생 클래스에서만 접근 가능|
+|internal|같은 어셈블리에서만 접근 가능. 클래스의 경우 접근 제한자를 생략하면 internal이 기본값으로 설정됨|
+
+유니티에서 public으로 선언한 변수는 인스펙터 뷰의 프로퍼티로 노출돼 값을 직접 수정할 수 있다. 반대로 private 접근 제한자로 설정된 변수는 노출되지 않는다.
+
 ### 인스펙터 뷰에 노출된 변수의 우선순위
+public으로 접근되는 변수의 변경은 인스펙터 뷰가 우선이다. 즉, 스크립트에선 10의 속도를 주었는데, 인스펙터 뷰에선 20으로 변경했을 때 게임에 적용되는 속도는 20으로 지정되어 있다.
+
 ### private 변수의 인스펙터 뷰 노출
+인스펙터 뷰의 모드를 디버그 모드로 설정하면 private 변숫값도 확인할 수 있다.
+
+![image](https://user-images.githubusercontent.com/85896566/188562761-eaa1b8b1-7ecf-49e3-8e7d-cdfd27930333.png)
+
+또 다른 방법은 SerializeField 속성(Attribute)을 사용하는 것이다. 이 방법은 디버그 모드가 아니여도 private 접근 지시자의 속성을 유지한 채 인스펙터 뷰에 노출하는 기능이다.
+
+```c#
+[SerializeField] Transform tr;
+```
+
 ### 벡터의 덧셈 연산
+이제 플레이어의 좌우 이동을 구현하기 위해 Vector3.right의 +, -값을 곱한다.
+
+```c#
+    private void Update()
+    {
+        float h = Input.GetAxis("Horizontal"); // -1.0f ~ 0.0f ~ +1.0f
+        float v = Input.GetAxis("Vertical");   // -1.0f ~ 0.0f ~ +1.0f
+
+        // 전후좌우 이동 방향 벡터 계산
+        Vector3 moveDir = (Vector3.forward * v) + (Vector3.right * h);
+
+        // Translate(이동 방향 * 속력 * Time.deltaTime) 이동 로직
+        tr.Translate(moveDir * moveSpeed * Time.deltaTime);
+    }
+```
+
+플레이했을 때 대각선 이동은 빠른 감이 있었다. moveDir 변수는 Vector3 타입으로, 키보드 입력값을 이용해 벡터 연산을 했다. 전진 방향의 벡터와 좌우 방향의 벡터를 덧셈 연산하면 대각선 방향의 벡터가 생성된다. 이 대각선 벡터의 길이는 피타고라스의 정리ˇ에 의해 루트2(약 1.414・・・)임을 알 수 있다.
+
+- 피타고라스의 정리
+  ![image](https://user-images.githubusercontent.com/85896566/188564473-78ea0ee1-c225-49af-8880-6e96bd6b9f41.png)
+
+대각선으로 이동할 때 속도가 빨라진 원인이다. 따라서 길이가 1인 벡터로 변환해 방향 성분만 사용해야 한다. 이처럼 길이가 1인 벡터를 '단위 벡터' 또는 '정규화 벡터(Normalized Vector)'라고 앞서 언급했다.
+
+벡터의 방향 성분만 추출하기 위해 정규화 벡터로 변경하려면 Vector3.normalized 속성을 이용해 정규화 벡터값을 사용한다. 즉, Vector3 타입으로 선언한 moveDir 변수는 vormalized 속성을 이용할 수 있다.
+
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerCtrl : MonoBehaviour
+{
+    Transform tr; // 컴포넌트 캐시 처리할 변수
+
+    public float moveSpeed = 8.0f;
+
+    private void Start()
+    {
+        tr = GetComponent<Transform>(); // Transform Component를 추출해 변수에 대입
+    }
+
+    private void Update()
+    {
+        float h = Input.GetAxis("Horizontal"); // -1.0f ~ 0.0f ~ +1.0f
+        float v = Input.GetAxis("Vertical");   // -1.0f ~ 0.0f ~ +1.0f
+        Vector3 moveDir = (Vector3.forward * v) + (Vector3.right * h); // 전후좌우 이동 방향 벡터 계산
+        tr.Translate(moveDir.normalized * moveSpeed * Time.deltaTime); // Translate(이동 방향 * 속력 * Time.deltaTime) 이동 로직
+    }
+}
+```
+
+#### Info - 벡터의 크기와 정규화
+벡터의 크기(magnitude)는 Vector3.magnitude 함수를 이용해 가져올 수 있다.
+
+```c#
+    private void Start()
+    {
+        float vec1 = Vector3.Magnitude(Vector3.forward);
+        float vec2 = Vector3.Magnitude(Vector3.forward + Vector3.right);
+        float vec3 = Vector3.Magnitude((Vector3.forward + Vector3.right).normalized);
+
+        Debug.Log("vec1 : " + vec1);
+        Debug.Log("vec2 : " + vec2);
+        Debug.Log("vec3 : " + vec3);
+    }
+```
+
+![image](https://user-images.githubusercontent.com/85896566/188566506-10e63054-257c-4d3f-9960-b9e96fcf7074.png)
+
 ## 캐릭터 회전 - Rotate
+게임 오브젝트를 회전할 때는 Transform.rotation 속성값을 변경하거나 Rotate 계열의 함수를 사용할 수 있다. 가장 기초적인 Rotate()는 다음과 같은 다양한 인자를 사용할 수 있다.
+
+```c#
+- void Rotate(new Vector3 eulerAngles, [Space relativeTo]);
+- void Rotate(float xAngle, float yAngle, float zAngle, [Space relativeTo]);
+- void Rotate(Vector3 axis, float angle, [Space relativeTo]);
+```
+
+다음 코드는 Update()에서 Rotate()의 인자에 Y축에 Time.deltaTime을 곱해서 시계방향으로 회전하는 것을 볼 수 있다. Rotate()의 인자는 모두 다르지만 전부 같은 의미이다.
+
+```c#
+void Update()
+{
+  transform.Rotate(Vector3.up * Time.deltaTime);
+  transform.Rotate(0, Time.deltaTime, 0);
+  transform.Rotate(Vector3.up, Time.deltaTime);
+}
+```
+
+PlayerCtrl.cs
+
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerCtrl : MonoBehaviour
+{
+    Transform tr; // 컴포넌트 캐시 처리할 변수
+
+    public float moveSpeed = 8.0f;
+    public float turnSpeed = 80.0f;
+
+    private void Start()
+    {
+        tr = GetComponent<Transform>(); // Transform Component를 추출해 변수에 대입
+    }
+
+    private void Update()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        float r = Input.GetAxis("Mouse X");
+
+        Vector3 moveDir = (Vector3.forward * v) + (Vector3.right * h); // 전후좌우 이동 방향 벡터 계산
+        tr.Translate(moveDir.normalized * moveSpeed * Time.deltaTime); // Translate(이동 방향 * 속력 * Time.deltaTime) 이동 로직
+        tr.Rotate(r * Vector3.up * turnSpeed * Time.deltaTime);        // Vector3.up 축을 기준으로 turnSpeed만큼의 속도로 회전
+    }
+}
+```
+
 ### 씬 뷰에서 가상 카메라의 이동
-## 애니메이션
-### 애니메이션 클립
+씬 뷰의 가상 카메라가 오브젝트를 추적하게 하려면
+
+1. 하이러키 뷰에서 추적할 객체를 선택
+2. Shift + F 또는 [Edit] -> [Lock View to Selected]
+3. 플레이
+
+![image](https://user-images.githubusercontent.com/85896566/188568795-b3ee7e17-c0ed-4e09-b940-7af97299865c.png)
+
+## Animation
+유니티는 Legacy Animation과 Mecanim Animation이라는 두 가지 유형의 애니메이션을 지원한다.
+- 레거시 애니메이션 : 하위 호환성을 고려한 애니메이션, 소스 코드로 컨트롤해야 함
+- 메카님 애니메이션 : 모션 캡처 애니메이션, 리타게팅ˇ 기능
+
+주인공 캐릭터는 레거시 애니메이션 타입으로 구현하고, 적 캐릭터는 메카님 애니메이션을 적용해보자.
+
+- 리타게팅(Retagetting) : 애니메이션을 재사용하는 기능을 말한다. 6장에서 자세히 소개
+
+![image](https://user-images.githubusercontent.com/85896566/188572525-2b3f37f9-9f7e-40a3-b16b-02892430dd85.png)
+
+|Animation Type 옵션|설명|
+|---|---|
+|none|애니메이션을 사용하지 않는다.|
+|Legacy|하위 호환성을 유지하기 위한 이전 방식의 애니메이션|
+|Generic|메카님 애니메이션. 인체형 모델이 아닌 3D 모델에 적용. 리타게팅 불가|
+|Humanoid|메카님 애니메이션. 사람과 같이 2족 보행하는 모델에 적용. 리타게팅 가능|
+
+Player는 레거시 애니메이션을 사용하기로 했으니 Legacy로 변경해준다.
+
+#### Info - 메카님 애니메이션 권장
+레거시 애니메이션은 하위 호환성을 고려한 유형이기 때문에 유니티사는 특별한 경우가 아니면 메카님 애니메이션을 사용하길 권장함. 하짐나 빠른 속도와 간단한 애니메이션을 동작하는 데는 아직도 레거시 애니메이션이 유용하게 사용되고 있다. 또한, 개발자 포럼에서 레거시 애니메이션은 곧 지원 중단될 것으로 예측하는 개발자들이 있지만, 당분간은 계속 지원할 것으로 예상한다.
+
+하이러키 뷰에 배치되어 있는 Player 객체의 인스펙터 뷰를 보면 Animation 컴포넌트가 추가돼 있다. 이 모델은 레거시 타입으로 설정된 모델을 의미한다.
+
+![image](https://user-images.githubusercontent.com/85896566/188573896-27fcffc3-f238-4e9e-bbec-8135bebc13a5.png)
+
+애니메이션 처리가 된 3D 모델을 씬 뷰에 추가했을 때 Animation Type에 따라 다음과 같이 서로 다른 컴포넌트가 자동으로 추가된다.
+
+- 레거시 애니메이션 : Animation Component
+- 메카님 애니메이션 : Animator Component
+
+둘 다 애니메이션과 관련된 컴포넌트지만, 작동 방식이 전혀 다르다. 따라서 3D 모델에 추가된 컴포넌트의 종류를 보고 해당 모델의 애니메이션 유형이 무엇으로 설정됐는지 구별할 수 있어야 한다.
+
+### Animation Clip
+애니메이션 클립 : 캐릭터의 걷기, 달리기, 점프, 총 쏘기와 같은 동작을 기록한 파일을 말한다. 그리고 애니메이션 컴포넌트는 애니메이션 클립에 기록된 관절의 위치와 회전 값을 프레임 단위로 재생시키는 역할을 한다.
+
+3D 모델링 툴에서 제작한 애니메이션 클립을 애니메이션 파일로 만드는 방법에는 세 가지 방식이 있다.
+1. 모든 애니메이션 클립이 하나의 애니메이션 파일에 들어 있고, 각 애니메이션 클립이 시작 프레임과 종료 프레임을 가지는 방식
+2. 위와 동일하게 모든 애니메이션 클립이 하나의 애니메이션 파일에 들어가 있지만, 미리 분리된 경우
+3. 애니메이션 클립을 동작별로 분리해 별도의 파일로 생성하는 방식. 이 때 생성된 애니메이션 클립의 파일명은 "모델명@애니메이션 클립명" 형태의 명명 규칙이 적용된다. 애니메이션 클립의 수가 많거나 애니메이션의 수정 작업이 빈번하게 일어날 것으로 예상한다면 이 방식으로 작업하는 것을 추천
+
 ### 애니메이션 적용
-### 애니메이션 블렌딩
+- 하이러키 뷰의 객체를 적용할 애니메이션 인스펙터 뷰 - 프리뷰에 드래그 & 드랍
+- 프로젝트 뷰의 원본 객체를 적용할 애니메이션 인스펙터 뷰 - 프리뷰에 드래그 & 드랍
+
+![image](https://user-images.githubusercontent.com/85896566/188576051-d4c495a3-18ba-43fd-b03a-c7fe737fe78d.png)
+
+애니메이션 클립의 Wrap Mode 속성값 중 'Loop'로 설정한다.
+
+- Loop : 클립의 첫 프레임부터 마지막 프레임까지 계속 반복
+
+![image](https://user-images.githubusercontent.com/85896566/188576783-944f09ab-e790-4516-99cd-3ddff2c3f851.png)
+
+애니메이션 컴포넌트 속성값
+- Animation : 실행되면 처음 동작하는 애니메이션 클립을 연결
+- Animations[] : 해당 모델이 실행할 수 있는 클립들을 저장(즉, 여기 포함되어 있지 않은 클립은 실행 불가)
+- Play Automatically : 게임이 실행되면 자동으로 클립을 재생함(언체크시 스크립팅으로 체크 가능)
+- 이하 생략
+
+아래의 코드는 Play Automatically를 언체크하고 스크립트에서 직접 컨트롤 하는 코드이다. 
+
+```c#
+public class PlayerCtrl : MonoBehaviour
+{
+    // 컴포넌트 캐시 처리할 변수
+    Transform tr;
+    Animation anim;
+
+    [중략...]
+    
+    private void Start()
+    {
+        // Component를 추출해 변수에 대입
+        tr = GetComponent<Transform>();
+        anim = GetComponent<Animation>();
+
+        // 애니메이션 실행
+        anim.Play("Idle");
+    }
+
+    private void Update()
+    {
+      [중략...]
+    }
+}
+```
+
+![image](https://user-images.githubusercontent.com/85896566/188578873-49ed1133-34a7-4b72-a76d-0984bce99f6f.png)
+
+이제 주인공 캐릭터를 이동시키면 이동 방향에 적합한 애니메이션을 생성되게 만들어보자.
+
+### Animation Blending
+유니티는 현재 수행 중인 애니메이션에서 다른 애니메이션으로 변경될 때 이를 부드럽게 연결해주는 애니메이션 블렌딩 기능을 제공한다.
+
+주인공이 정지 상태일 때는 Idle 애니메이션을 실행하다가 전진하는 경우 자연스럽게 RunF 애니메이션으로 변경되게 해보자.
+
+```C#
+    private void Update()
+    {
+      [중략...]
+      PlayerAnim(h, v); // 주인공 캐릭터의 애니메이션 설정
+    }
+
+    void PlayerAnim(float h, float v) // 키보드 입력값을 기준으로 동작할 애니메이션 수행
+    {
+        if      (v >=  0.1f) anim.CrossFade("RunF", 0.25f); // 전진 애니메이션 실행
+        else if (v <= -0.1f) anim.CrossFade("RunB", 0.25f); // 후진 애니메이션 실행
+        else if (h >=  0.1f) anim.CrossFade("RunR", 0.25f); // 오른쪽 이동 애니메이션 실행
+        else if (h <= -0.1f) anim.CrossFade("RunL", 0.25f); // 왼쪽 이동 애니메이션 실행
+        else                 anim.CrossFade("Idle", 0.25f); // 정지 시 대기 애니메이션 실행
+    }
+```
+
+PlayerAnim()는 주인공 캐릭터에 적절한 애니메이션 클립을 재생시키는 역할을 한다. 주인공 캐릭터의 이동 방향을 판단하는 기준인 h와 v 변수를 인자로 넘겨준다. 주인공 캐릭터가 전후/좌우로 움직이는 것을 0을 기준으로 판단할 수 있기 때문이다. 그리고 키보드를 누르지 않아서 0 값이 전달되면 대기 상태인 Idle 애니메이션 클립을 실행한다.
+
+애니메이션 클립을 실행하는 CrossFade()는 두 개의 인자를 받는다. 첫 번째 인자는 변경할 애니메이션 클립의 명칭이며, 두 번째 인자는 다른 애니메이션 클립으로 페이드아웃되는 시간을 의미한다. 이 때 단순히 정해진 시간동안 애니메이션이 변경되는 것이 아니라 애니메이션 키프레임을 보간(Interpolate)해 부드럽게 보정시킨다.
+
 ## 무기 장착
+무기류를 장착하려면 모델의 Bone 구조를 확인해야 한다. 
+
+![image](https://user-images.githubusercontent.com/85896566/188583052-9d8ff156-357c-4476-af91-8270ed8de9a2.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188583507-2f48b364-a0bb-4ab9-82c2-b9ba1705c51c.png)
+
+무기류를 장착해준다면 처음엔 무기 객체의 Transform 속성값을 리셋해준다.
+
+이후 플레이에서 애니메이션과 무기류의 싱크를 확인하고 부족하다면 Transform을 적절히 변경해준다.
+
+![image](https://user-images.githubusercontent.com/85896566/188584121-56839ffc-a57f-4e74-b290-6dc055170bee.png)
+
 ## 그림자
+게임에 있어서 입체감을 표현하기 위한 그림자 효과는 매우 중요한 요소다. 이어서 그림자를 표현하는 몇 가지 방법을 소개하고자 한다.
+
 ### 실시간 그림자
+유니티는 Directional Light, Point Light, Spotlight라는 세 가지 광원에 대해 실시간 그림자(Real Time Shadow)를 지원한다. 하지만 모바일 디바이스의 성능에 따라 실시간 그림자는 처리 비용이 매우 크다.
+
+유니티는 실시간 그림자가 기본으로 적용돼 있으며 Directional Light 속성 중 Shadow Type 옵션으로 설정한다. Shadow Type 속성으로는 No Shadows, Soft Shadows, Hard Shadows로 세 가지 옵션이 있고 각각은 아래의 내용이다.
+
+- No Shadows : 실시간 그림자를 적용하지 않는다.(기본 설정값)
+  ![image](https://user-images.githubusercontent.com/85896566/188585485-5fd8de1e-7bbc-48f5-a5c8-8942ddd38399.png)
+- Soft Shadows : 실시간 그림자를 표현하지만, 외곽선에 계단 현상이 발생한다.
+  ![image](https://user-images.githubusercontent.com/85896566/188585527-2f50d710-cfa8-40cd-8ccb-538bc4c40e16.png)
+- Hard Shadows : 부드러운 실시간 그림자를 표현하지만, 가장 많은 부하를 준다.
+  ![image](https://user-images.githubusercontent.com/85896566/188585577-352dfa66-8ba8-492f-aba9-8a08b66c1b15.png)
+
+실시간 그림자의 시각적 효과는 매우 탁월하지만, 엔진에 많은 부하를 준다. 따라서 실시간 그림자 효과가 필요 없는 3D 모델은 실시간 그림자 영향에서 제외하는 설정을 빠뜨리지 않아야 한다.
+
+3D 모델은 Mesh Renderer 또는 Skinned Mesh Renderer 중 한 컴포넌트를 반드시 갖고 있다. 그리고 이 두 가지 컴포넌트에는 실시간 그림자와 관련된 Cast Shadows와 Receive Shadows 속성이 있다.
+
+![image](https://user-images.githubusercontent.com/85896566/188586219-ec933ae1-d2a2-4d3b-b9ba-3d2c7c4ae2b4.png)
+
+- Cast Shadows : 빛을 받아서 자신의 그림자를 만들 것인지 결정하는 속성
+  |Cast Shadows|Option|
+  |---|---|
+  |Off|그림자를 만들지 않는다.|
+  |On|그림자를 만든다.|
+  |Two Sided|백 페이스 컬링을 무시하고 그림자를 양면으로 만든다.|
+  |Shadows Only|그림자를 만들지만, 자신은 렌더링하지 않는다. 즉, 화면에 보이지 않는 특성이 있어 그림자 처리만을 위한 로우 폴리 3D 모델에 활용할 수 있다.|
+- Receive Shadows : 다른 그림자에 들어갔을 때 표면에 그림자의 영향을 받는지 아닌지
+
+따라서 실시간 그림자의 영향을 받지 않아도 시각적 효과에 크게 상관없는 3D 모델은 이 두가지 옵션을 적절히 설정해 그림자를 생성하지 않게 한다.
+
+#### Info = Cast Shadows 속성의 Two Sided 옵션에 대해
+Plane 또는 Quad처럼 단면(Single-Side)만 렌더링 하는 모델은 Cast Shadows 속성을 On으로 하고, 빛을 모델의 뒤쪽(Backface)에서 비추면 그림자가 생성되지 않는다.(두 번째 그림 참고). 이 때 Cast Shadows 속성을 Two Sided로 설정하면 그림자가 생성된다.(세 번째 그림 참고).
+
+![image](https://user-images.githubusercontent.com/85896566/188587747-bbae2429-cb33-4625-bfb4-b270b6a50994.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188588083-1ef86843-19db-4927-a5fa-821e23af1720.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188588158-69088fde-024c-44d2-bc5b-73ad29f8cd21.png)
+
 ### 메시를 이용한 그림자
+실시간 그림자보다 시각적인 효과는 덜 하지만, 그래도 입체감을 낼 수 있는 가벼운 그림자 처리를 구현할 수 있는 방법. 단순한 평면 메시를 이용하는 방법으로 모바일 게임에서 흔히 볼 수 있는 방식
+
+먼저 객체에 적용된 실시간 그림자가 생성되지 않도록 설정한다. + 무기류
+
+- Cast Shadows - Off
+- Receive Shadows - 언체크
+
+![image](https://user-images.githubusercontent.com/85896566/188589022-a3ce0133-733c-4cb1-b6c4-2f951acc4a05.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188589500-307b6a1b-e4e9-4423-b154-70140b185eaf.png)
+
+다음 단계로 그림자를 표시할 메시는 유니티에서 제공하는 Quad를 사용한다. Quad 모델을 생성해 Player에게 자식화한다.
+- 콜라이더 컴포넌트 삭제
+- 이름 변경
+- 준비한 Material 지정
+- Material Shader를 [Mobile] -> [Particles] -> [Multiply]로 변경
+
+![image](https://user-images.githubusercontent.com/85896566/188591059-fa12ac74-a614-4127-b851-b4d427ea6328.png)
+
+이 방법은 부하가 적은 방법으로 많이 사용되고 있지만, 스테이지에 굴곡이 있거나 경사로가 있다면 그림자가 다른 메시에 묻혀 제대로 표현되지 않는다는 점도 기억하자.
+
 ## Level Of Detail 설정
+LOD, Level Of Detail란, 화면을 렌더링하는 카메라로부터 멀리 떨어질수록 낮은 폴리곤으로 변경해 렌더링 부하를 줄여주는 기법이다.
+
+주인공 모델의 3가지 메시는 3단계 LOD로 설정된 메시다.
+
+![image](https://user-images.githubusercontent.com/85896566/188591864-488c4d45-81ff-49f8-a8ca-5c40bfa5a1a2.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188591939-b3a0b748-bc8b-4320-827a-452f36862d1e.png)
+
+![image](https://user-images.githubusercontent.com/85896566/188592027-19ee3a96-c59b-45a3-8e25-e1c9d30e0a34.png)
+
 ### LOD Group Component
+LOD Group Component는 카메라와 피사체의 거리에 따라 렌더링할 메시를 결정하는 역할을 함
+LOD Group Component를 Add한다.
+
+LOD 구간대로 메시를 차례대로 드래그 & 드롭한다. LOD 0구간은 하이 폴리곤이며 숫자가 커질수록 로우 폴리곤 메시를 연결한다.
+
+![image](https://user-images.githubusercontent.com/85896566/188592843-af83f7e3-d156-4d1b-8849-a4ebba3126e8.png)
+
+Culled(Red)는 카메라와의 거리가 아주 멀리 떨어져 화면에서 렌더링하지 않는 구간을 의미한다.
+
+주인공 캐릭터는 대부분 카메라와의 거리가 고정돼있기 때문에 굳이 LOD를 적용할 필요는 없지만, 멀티플레이어 게임에서는 상대편이 멀리 떨어져 있는 내 캐릭터를 봤을 때 LOD가 유용하게 사용될 수 있다. 특히 모바일 게임에서는 렌더링 최적화 기법 가운데 중요하게 꼽는 것 중 하나가 바로 LOD 기능이다.
+
 ## Follow Camera 로직
+```C#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FollowCam : MonoBehaviour
+{
+    // 따라가야 할 대상을 연결할 변수
+    public Transform targetTr;
+    // Main Camera 자신의 Transform 컴포넌트
+    private Transform camTr;
+
+    // 따라갈 대상으로부터 떨어질 거리
+    [Range(2.0f, 20.0f)]
+    public float distance = 10.0f;
+
+    // Y축으로 이동할 높이
+    [Range(0.0f, 10.0f)]
+    public float height = 2.0f;
+
+    void Start()
+    {
+        // Main Camera 자신의 Transform 컴포넌트를 추출
+        camTr = GetComponent<Transform>();
+    }
+
+    void LateUpdate()
+    {
+        // 추적해야 할 대상의 뒤쪽으로 distance만큼 이동
+        // 높이를 height만큼 이동
+        Vector3 pos = targetTr.position
+                      + (-targetTr.forward * distance)
+                      + (Vector3.up * height);
+
+        // Camera를 피벗 좌표를 향해 회전
+        camTr.LookAt(targetTr.position + (targetTr.up * targetOffset));
+    }
+}
+```
+
+[Range(min, max)] 어트리뷰트를 사용하면 다음 라인에 선언한 변수의 입력 범위를 (min, max)로 제한할 수 있고, 인스펙터 뷰에 슬라이드 바를 표시한다.
+
+![image](https://user-images.githubusercontent.com/85896566/188594277-b3c9c9a8-e8c8-4388-abb6-ce0adfa6e83f.png)
+
+LateUpdate()에서 후처리 로직으로 이용한 이유는 Update()의 순서에 플레이어의 이동 로직이 항상 먼저 실행되는 것이 보장되지 않기 때문에 카메라가 떨리는 현상이 발생한다. 따라서 선행된 결괏값을 갖고 후처리 작업을 해야 하므로 LateUpdate()를 이용했다.
+
+Transform.LookAt() 함수는 인자로 Vector3 좌표 또는 Transform 컴포넌트를 전달하면 해당 좌표로 회전시키는 기능을 한다. 먼저 카메라의 위치를 이동시킨 후 따라갈 대상을 향해 카메라의 각도를 회전시키는 역할
+
 ### Vecotr3.Lerp, Vector3.Slerp
+선형 보간(Linear Interpolation)과 구면 선형 보간(Spherical Linear Interpolation)은 시작점과 끝점 사이의 특정 위치의 값을 추정할 때 사용한다. 이러한 보간 함수는 현재 값을 목푯값으로 변경할 때 갑자기 변경하지 않고 부드럽게 변경시키는 로직에 많이 활용된다.
+
+선형 보간이라는 명칭에서 알 수 있듯이 "선형"은 "직선"을 의미한다. 균일한 속도로 이동시키거나 회전시킬 때 사용한다.
+
+유니티에서는 Lerp 선형 보간 함수를 제공하며 Vector3, Mathf, Quaternion, Color 구조체에서 사용할 수 있다.
+
+매개변수는 Lerp(a, b, t)로, a와 b를 잇는 선을 t를 통해 분할하는 지점을 반환한다. 예를 들어 t값이 0.5라면 a, b의 중간지점을 반환한다.
+
+![image](https://user-images.githubusercontent.com/85896566/188597015-35e390e2-0f85-4768-af40-f2474ef65675.png)
+
+```c#
+Vector3.Lerp(시작 좌표, 종료 좌표, t);
+Mathf.Lerp(시작 값, 종료 값, t);
+Quaternion.Lerp(시작 각도, 종료 각도, t);
+```
+
+구면 선형 보간(Spherical Linear Interpolation)은 직선의 형태가 아닌 구면(구체)의 형태로 값을 추론한다. 구면을 따라서 값을 반환하기에 시간 t가 증가할 때 시작점과 종료점은 느리게 증가하고 중간지점은 동일한 시간 대비 이동해야 할 거리가 크기 때문에 빠르게 이동하는 특성이 있다. 따라서 구면 선형 보간은 회전 로직에 사용된다.
+
+![image](https://user-images.githubusercontent.com/85896566/188598037-2aba1e2b-37e1-4e33-bddf-655729cece61.png)
+
+유니티에서 제공하는 구면 선형 보간 함수는 Slerp로 Vector3, Quaternion 구조체에서 사용할 수 있고, 매개변수는 Lerp와 똑같이 가지게 되며 함수의 사용법은 다음과 같다.
+
+```c#
+Vector3.Slerp(시작 좌표, 종료 좌표, t);
+Quaternion.Slerp(시작 각도, 종료 각도, t);
+```
+
+이제 스크립트를 수정한다.
+
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FollowCam : MonoBehaviour
+{
+    // 따라가야 할 대상을 연결할 변수
+    public Transform targetTr;
+    // Main Camera 자신의 Transform 컴포넌트
+    private Transform camTr;
+
+    // 따라갈 대상으로부터 떨어질 거리
+    [Range(2.0f, 20.0f)]
+    public float distance = 10.0f;
+
+    // Y축으로 이동할 높이
+    [Range(0.0f, 10.0f)]
+    public float height = 2.0f;
+
+    // 반응 속도
+    public float damping = 10.0f;
+
+    void Start()
+    {
+        // Main Camera 자신의 Transform 컴포넌트를 추출
+        camTr = GetComponent<Transform>();
+    }
+
+    void LateUpdate()
+    {
+        // 추적해야 할 대상의 뒤쪽으로 distance만큼 이동
+        // 높이를 height만큼 이동
+        Vector3 pos = targetTr.position
+                      + (-targetTr.forward * distance)
+                      + (Vector3.up * height);
+
+        구면 선형 보간함수를 사용해 부드럽게 위치를 변경
+        camTr.position = Vector3.Slerp(camTr.position,           // 시작 위치
+                                      pos,                       // 목표 위치
+                                      Time.deltaTime * damping); // 시간 t
+
+        // Camera를 피벗 좌표를 향해 회전
+        camTr.LookAt(targetTr.position + (targetTr.up * targetOffset));
+    }
+}
+```
+
+변경한 코드는 카메라가 이동할 목표 위치를 변수에 저장한 후 Slerp()를 이용해 점진적으로 이동시킨다. 실행해보면 처음 작성했던 코드보다 부드러워진 것을 확인할 수 있다.
+
 ### Vector3.SmoothDamp
+
+
 ### Target Offset 적용
+
+
 ## 정리
+- 주인공 3D 모델 임포트
+- C# 스크립트 생성 방법
+- 키보드 입력값 처리
+- 캐랙터의 이동 및 회전
+- 애니메이션 처리
+- 실시간 그림자와 모바일용 그림자 처리
+- LOD 설정
+- FollowCamera 로직 구현
 
 <br>
 
