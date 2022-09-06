@@ -26,12 +26,12 @@ order: 4
 > - Discord
 >   - [![Discord](https://discord.c99.nl/widget/theme-4/742324810863870052.png)](http://discord.com/users/742324810863870052)
 >
-> [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=ugee99)](https://github.com/anuraghazra/github-readme-stats)
-> <img src="https://github-readme-stats.vercel.app/api?username=ugee99&bg_color=30,e96443,904e95&title_color=fff&text_color=fff">
-> <img src="https://activity-graph.herokuapp.com/graph?username=ugee99&theme=github)](https://github.com/ashutosh00710/github-readme-activity-graph">
+> [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=ugee0810)](https://github.com/anuraghazra/github-readme-stats)
+> <img src="https://github-readme-stats.vercel.app/api?username=ugee0810&bg_color=30,e96443,904e95&title_color=fff&text_color=fff">
+> <img src="https://activity-graph.herokuapp.com/graph?username=ugee0810&theme=github)](https://github.com/ashutosh00710/github-readme-activity-graph">
 
 
 <br>
 <br>
 
-# [※ Technical Stack](https://github.com/Ugee99#-technical-stack)
+# [※ Technical Stack](https://github.com/Ugee0810#-technical-stack)
