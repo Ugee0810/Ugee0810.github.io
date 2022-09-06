@@ -850,7 +850,7 @@ Update()는 프레임에 따라 호출 되는데, 이 횟수가 기기의 성능
 
 30프레임은 1/30초, 60프레임은 1/60초를 해주어 프레임 레이트가 서로 다른 기기에서도 개발자가 정한 일정한 속도로 이동시킬 수 있다.
 
-```C#
+```c#
 tr.Translate(Vector3.forward * Time.deltaTime * 1);
 ```
 
@@ -859,7 +859,7 @@ tr.Translate(Vector3.forward * Time.deltaTime * 1);
 
 특히 Update()에 이동 및 회전 로직을 작성했다면 반드시 Time.deltaTime 속성을 사용해야 한다.
 
-```C#
+```c#
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -1143,7 +1143,7 @@ public class PlayerCtrl : MonoBehaviour
 
 주인공이 정지 상태일 때는 Idle 애니메이션을 실행하다가 전진하는 경우 자연스럽게 RunF 애니메이션으로 변경되게 해보자.
 
-```C#
+```c#
     private void Update()
     {
       [중략...]
@@ -1264,7 +1264,7 @@ Culled(Red)는 카메라와의 거리가 아주 멀리 떨어져 화면에서 �
 주인공 캐릭터는 대부분 카메라와의 거리가 고정돼있기 때문에 굳이 LOD를 적용할 필요는 없지만, 멀티플레이어 게임에서는 상대편이 멀리 떨어져 있는 내 캐릭터를 봤을 때 LOD가 유용하게 사용될 수 있다. 특히 모바일 게임에서는 렌더링 최적화 기법 가운데 중요하게 꼽는 것 중 하나가 바로 LOD 기능이다.
 
 ## Follow Camera 로직
-```C#
+```c#
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
