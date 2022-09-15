@@ -224,5 +224,5 @@ float secPerBeat = 60 / bpm;
 - [Here's a quick and dirty guide I just wrote: How To Make A Rhythm Game](https://www.reddit.com/r/gamedev/comments/2fxvk4/heres_a_quick_and_dirty_guide_i_just_wrote_how_to/)
 - [Coding to the Beat - Under the Hood of a Rhythm Game in Unity](https://www.gamedeveloper.com/audio/coding-to-the-beat---under-the-hood-of-a-rhythm-game-in-unity)
 - [Music Syncing in Rhythm Games](https://www.gamedeveloper.com/programming/music-syncing-in-rhythm-games)
-- [docs.unity3d.com | AudioSettings.dspTime](https://docs.unity3d.com/ScriptReference/AudioSettings-dspTime.html)
+- [docs.unity3d.com / AudioSettings.dspTime](https://docs.unity3d.com/ScriptReference/AudioSettings-dspTime.html)
 - [AudioClip から BPM を取得できる「UniBpmAnalyzer」紹介](https://baba-s.hatenablog.com/entry/2018/02/16/085900)
