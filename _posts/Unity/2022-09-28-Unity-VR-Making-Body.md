@@ -1,6 +1,6 @@
 ---
 title:      Unity VR Making Body(바디 리깅 구현하기)
-date:       "2022-09-15"
+date:       "2022-09-28"
 categories: ["Unity", "Unity VR"]
 tags:       ["Unity", "Unity VR"]
 # pin:        true
