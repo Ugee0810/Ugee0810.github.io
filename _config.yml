@@ -21,21 +21,21 @@ timezone: Asia/Seoul
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Ugee's Tech Blog                          # the main title
+title: Ugee's Tech Blog # the main title
 
-tagline: 신입 개발자를 꿈꾸는 사람의 기술 공부 블로그입니다.   # it will display as the sub-title
+tagline: 개발자를 꿈꾸는 사람의 기술 공부 블로그입니다. # it will display as the sub-title
 
-description: >-                        # used by seo meta and the atom feed
-  GitHub Pages, Tech Blog
+description: >-  # used by seo meta and the atom feed
+  개발자를 꿈꾸는 사람의 기술 공부 블로그입니다.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: 'https://ugee0810.github.io/'
 
 github:
-  username: Ugee0810             # change to your github username
+  username: Ugee0810 # change to your github username
 
 twitter:
-  username: # twitter_username            # change to your twitter username
+  username: # twitter_username # change to your twitter username
 
 social:
   # Change to your full name.
@@ -118,7 +118,7 @@ assets:
 pwa:
   enabled: true   # the option for PWA feature
 
-paginate: 10
+paginate: 15
 
 # ------------ The following options are not recommended to be modified ------------------
 
