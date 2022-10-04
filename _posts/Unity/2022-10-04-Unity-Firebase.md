@@ -102,5 +102,7 @@ keytool -list -v -alias ugee -keystore ugee.keystore
 디지털 지문을 등록 후 최신 .json 파일을 다운받고 기존에 넣어 둔 파일을 지우고 교체한다.
 ![image](https://user-images.githubusercontent.com/85896566/193752574-b6e7f1d3-17ad-4e97-950d-e72cd2d69710.png)
 
+이후에 컬렉션이나 사용자를 생성하는 로직을 통해 관리한다.
+
 # 참고 사이트
 - [유니티 멀티플레이어 네트워크 게임 한방에 만들기 (포톤 + 파이어베이스) 3/10](https://youtu.be/rABO1NFQ_PE)
