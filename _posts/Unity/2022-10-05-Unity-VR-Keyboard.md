@@ -62,6 +62,7 @@ Collider 오브젝트 컴포넌트에 기존 On Release() 이벤트 삭제
 ![image](https://user-images.githubusercontent.com/85896566/193960401-43ca9985-066c-458d-bde7-b5225c55cdbd.png)
 
 - Keyboard.cs ---> Keyboard 오브젝트에 지정
+
 ```c#
 using UnityEngine;
 using TMPro;
@@ -116,6 +117,7 @@ public class Keyboard : MonoBehaviour
 ```
 
 - KeyboardButton.cs ---> KeyboardButton 오브젝트에 지정
+
 ```c#
 using TMPro;
 using UnityEngine;
@@ -144,6 +146,7 @@ public class KeyboardButton : MonoBehaviour
 ```
 
 - TypingArea.cs ---> Typing Area 오브젝트에 지정
+
 ```c#
 using UnityEngine;
 
