@@ -1,8 +1,8 @@
 ---
 title:      VR Keyboard | Unity Tutorial for Oculus Quest(유니티 XR 키보드 만들기)
 date:       "2022-10-05"
-categories: ["Unity", "VR"]
-tags:       ["Unity", "VR"]
+categories: ["Unity", "Unity VR"]
+tags:       ["Unity", "Unity VR"]
 # pin:        true
 ---
 
@@ -289,4 +289,4 @@ Typing Collider의 컴포넌트 중 메쉬 필터와 렌더러를 삭제하고 �
 ![image](https://user-images.githubusercontent.com/85896566/194004230-0707e2b8-35ef-4042-b65e-aee8b428c7da.png)
 
 # 참고 사이트
-- [VR Keyboard | Unity Tutorial for Oculus Quest](https://youtu.be/PyKW9kecyqg)
+- [VR Keyboard - Unity Tutorial for Oculus Quest](https://youtu.be/PyKW9kecyqg)

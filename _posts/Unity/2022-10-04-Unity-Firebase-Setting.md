@@ -1,5 +1,5 @@
 ---
-title:      Unity Firebase(유니티 파이어베이스 연동하기)
+title:      Unity Firebase Setting(유니티 파이어베이스 연동하기)
 date:       "2022-10-04"
 categories: ["Unity", "Firebase"]
 tags:       ["Unity", "Firebase"]
