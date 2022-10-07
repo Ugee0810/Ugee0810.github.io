@@ -17,7 +17,7 @@ sin 곡선의 공식을 이용해 위/아래 또는 좌/우로 부드럽게 움�
 
 # 카메라가 이동 때 마다 물결 애니메이션 구현
 
-```C#
+```c#
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
