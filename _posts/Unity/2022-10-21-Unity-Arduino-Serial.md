@@ -33,7 +33,7 @@ public class Arduino : MonoBehaviour
         SerialPort1.Open();
     }
 
-    /// 인풋 받은 뮨저열에 따라 연결된 시리얼 포트에게 문자열로 송신한다.
+    /// 인풋 받은 문자열에 따라 연결된 시리얼 포트에게 문자열로 송신한다.
     void Update()
     {
         switch (Input.inputString)
