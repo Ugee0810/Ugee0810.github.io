@@ -177,7 +177,7 @@ public class FollowCamera : MonoBehaviour
 여기선 SmoothStep이라는 수학적인 원리를 사용합니다. 아래의 주소에 들어가서 수식을 참고할 수 있습니다.
 
 ## ※ SmoothStep
-https://chicounity3d.wordpress.com/2014/05/23/how-to-lerp-like-a-pro/
+- [How to Lerp like a pro](https://chicounity3d.wordpress.com/2014/05/23/how-to-lerp-like-a-pro/)
 
 ![image](https://user-images.githubusercontent.com/85896566/199003909-f65a3ae1-5556-47a3-a34e-44cdd150556f.png)
 
