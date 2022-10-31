@@ -25,38 +25,38 @@ tags:       ["Unity"]
 
 # ※ Apply
 ```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
- 
-public class ActionAndRamda : MonoBehaviour
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+
+public class Action : MonoBehaviour
 {
-    // delegate void Action(); --> 이 부분이 using System 내부에 구현되어 있습니다.
-    Action work;
- 
-    void Start ()
-    {
-        // MoveBricks() 라고 하면 함수가 실행되는 것이므로 MoveBricks 라고 적습니다.
-        work += MoveBricks; 
-        work += DigIn;
-    }
- 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            work();
-    }
- 
-    void MoveBricks()
-    {
-        Debug.Log("벽돌을 옮겼다.");
-    }
- 
-    void DigIn()
-    {
-        Debug.Log("땅을 팠다.");
-    }
+    // delegate void Action(); --> 이 부분이 using System 내부에 구현되어 있습니다.
+    Action work;
+
+    void Start ()
+    {
+        // MoveBricks() 라고 하면 함수가 실행되는 것이므로 MoveBricks 라고 적습니다.
+        work += MoveBricks;
+        work += DigIn;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            work();
+    }
+
+    void MoveBricks()
+    {
+        Debug.Log("벽돌을 옮겼다.");
+    }
+
+    void DigIn()
+    {
+        Debug.Log("땅을 팠다.");
+    }
 }
 ```
 
