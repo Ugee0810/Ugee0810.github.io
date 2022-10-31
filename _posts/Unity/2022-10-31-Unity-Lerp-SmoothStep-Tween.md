@@ -1,5 +1,5 @@
 ---
-title:      Unity Mathf.Lerp, Slerp(유니티 선형 보간, 구면 선형 보간의 정확한 사용법)
+title:      Unity Mathf.Lerp, Slerp, Tween, SmoothStep(유니티 선형 보간, 구면 선형 보간의 정확한 사용법, Tween과 SmoothStep)
 date:       "2022-10-31"
 categories: ["Unity"]
 tags:       ["Unity"]
@@ -46,14 +46,12 @@ a는 서울이고, b는 런던이다. 우리는 서울부터 런던까지의 길
 
 단순히 a와 b 두 점 사이의 거리를 나눠서 위치를 얻는 것이 아닌, a와 b가 구체평면 위에 위치한다고 가정한 후, 호의 거리를 선형적으로 보간해서 위치를 얻어내는 것이다.
 
-그러므로 구면 선형 보간을 하는 경우, a와 b사이의 직선 거리를 보간하지 않고, a와 b사이에 포물선이 만들어진 후
-
-그 포물선 위를 보간하는 것이다.
+그러므로 구면 선형 보간을 하는 경우, a와 b사이의 직선 거리를 보간하지 않고, a와 b사이에 포물선이 만들어진 후 그 포물선 위를 보간하는 것이다.
 
  
 ### 정리
-- 선형 보간 ---> 평평한 면 위 
-- 구면 선형 보간 ---> 구면 위
+- 선형 보간 => 평평한 면 위 
+- 구면 선형 보간 => 구면 위
 
 <br>
 
@@ -130,7 +128,7 @@ public class FollowCamera : MonoBehaviour
 
 위 사진처럼 한 프레임에서 0.2f 위치로 보간되었을 때 시작 좌표가 변경되게 되는 것입니다. 그럼 다음 프레임에선 사진의 0좌표를 시작 좌표의 기준이 되어 또 부정확한 0.2f의 거리를 보간하게 됩니다.
 
- ![image](https://user-images.githubusercontent.com/85896566/198972629-77060d0b-1202-42ad-93d4-41e279413cbc.png)
+![image](https://user-images.githubusercontent.com/85896566/198972629-77060d0b-1202-42ad-93d4-41e279413cbc.png)
 
 ![image](https://user-images.githubusercontent.com/85896566/198972665-8e9ca7b9-1e91-42cf-8f84-eff28d1bbc98.png)
 
@@ -172,9 +170,100 @@ public class FollowCamera : MonoBehaviour
 }
 ```
 
+아까 전 코드는 시작 지점이 현재 위치였고, Time.dletaTime을 이용해 보간하다 보니 도착 지점에 가까워질 수록 서서히 느려졌었습니다. 이젠 고정된 좌표에서 보간값이 항상 일정하기 때문에 일정한 등속을 유지합니다.
+
+만약 아까 전 처럼 도착 지점에 가까워질 수록 느려지게 하고 싶다면 어떻게 해야할까요?
+
+여기선 SmoothStep이라는 수학적인 원리를 사용합니다. 아래의 주소에 들어가서 수식을 참고할 수 있습니다.
+
+## ※ SmoothStep
+https://chicounity3d.wordpress.com/2014/05/23/how-to-lerp-like-a-pro/
+
+![image](https://user-images.githubusercontent.com/85896566/199003909-f65a3ae1-5556-47a3-a34e-44cdd150556f.png)
+
+노란색으로 표시한 부분을 복사하여 사용해줍니다.
+
+빨간 줄로 표시되어 있는 부분부터 시작 좌표입니다.
+
+
+```c#
+using UnityEngine;
+
+public class FollowCamera : MonoBehaviour
+{
+    public Transform startPosition;
+    public Transform endPosition;
+
+    // 진행될 총 시간
+    float lerpTime = 0.5f;
+    // 경과 카운트
+    float currentTime = 0f;
+
+    private void Start()
+    {
+        this.transform.position = startPosition.position;
+    }
+
+    private void Update()
+    {
+        currentTime += Time.deltaTime;
+
+        if (currentTime >= lerpTime)
+            currentTime = lerpTime;
+
+        float t = currentTime / lerpTime;
+
+        t = t * t * t * (t * (6f * t - 15f) + 10f);
+
+        this.transform.position = Vector3.Lerp(startPosition.position, endPosition.position, t);
+    }
+}
+```
+
+float형 t를 생성하여 기존 보간값을 저장하고 SmoothStep을 전개한 t를 보간 값에 적용합니다.
+
+```c#
+using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class FollowCamera : MonoBehaviour
+{
+    public Transform startPosition;
+    public Transform endPosition;
+
+    Button btn;
+
+    // 진행될 총 시간
+    float lerpTime = 0.5f;
+    // 경과 카운트
+    float currentTime = 0f;
+
+    private void Start()
+    {
+        this.transform.position = startPosition.position;
+        
+        // OnClick() Lambda
+        btn.onClick.AddListener(() => { StartCoroutine(LerpTest()); });
+    }
+
+    IEnumerator LerpTest()
+    {
+        currentTime += Time.deltaTime;
+        if (currentTime >= lerpTime) currentTime = lerpTime;
+        float t = currentTime / lerpTime;
+        t = t * t * t * (t * (6f * t - 15f) + 10f);
+        this.transform.position = Vector3.Lerp(startPosition.position, endPosition.position, t);
+        yield return null;
+    }
+}
+```
+
+최종 코드입니다. Update()에서 매 프레임마다 돌려주는 것 보다 코루틴으로 만들어 특정 이벤트에 의해 실행해주는 방식이 선호되기 때문에 이 코드에선 Button 컴포넌트의 OnClick() 리스너에 람다식으로 매핑해주었습니다.
 
 <br>
 
 # ※ Reference Site
 - [오늘코딩 - [유니티] Lerp를 프로처럼 사용하는 방법](https://youtu.be/_QOvSLCXm7A)
 - [[유니티] Lerp 와 Slerp 의 차이 - 선형 보간, 구면 선형 보간](https://gnaseel.tistory.com/14)
+- [How to Lerp like a pro](https://chicounity3d.wordpress.com/2014/05/23/how-to-lerp-like-a-pro/)
