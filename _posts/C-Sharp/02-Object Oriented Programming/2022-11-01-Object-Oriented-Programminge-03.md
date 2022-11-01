@@ -1,72 +1,281 @@
 ---
-title:      C# Object Oriented Programming#03 | 상속성
+title:      C# Object Oriented Programming#03 | 상속성, sealed 키워드, 부모/자식 클래스 형식변환, is/as 연산자, object
 date:       "2022-11-01"
 categories: ["C#", "02.Object Oriented Programming"]
 tags:       ["C#", "Object Oriented Programming"]
 # pin:        true
 ---
 
-# ※ 상속성
-> 코드의 재사용성
+# ※ 상속
+클래스는 다른 하나의 클래스로부터 유산을 물려받을 수 있음 (=상속받을 수 있음)
 
-- 부모 클래스 -> Player
-  - 직업에 상관없이 플레이어라면 모두 가지고 잇는 공통된 속성과 기능을 부모클래스로 묶는다.
-- 자식 클래스 -> Mage, Aracher, Knight
-  - 이 클래스들은 Player를 상속받으므로 플레이어라면 모두 갖고 있는 공통 멤버들을 다시 필드에 명시해줄 필요가 없다.
-  - 이런 부분들은 Player 상속으로 해결하고 법사, 궁수, 전사들만의!!! 고유의 속성과 기능을 추가해주면 되는 식이다.
+다중상속은 지원하지 않는다. (동시에 2개 이상의 클래스를 상속받는 것)
 
-자식 클래스에서 멤버 필드에 직접 명시해주지 않더라도 상속만 하면 자동으로 부모의 멤버들도 가지게 된다. -> 코드의 재사용성
-
-> 부모 생성자가 먼저 호출 된다.
-
-당연히 생성자도 함수이므로 부모 생성자를 자식 클래스에서 상속을 받고, 언제나 부모 생성자를 먼저 호출한다. 개발자가 명시하지 않으면 부모 클래스의 디폴트 생성자가 호출되며, ```base(123)``` 이런식으로 ```base```를 사용하여 원하는 종류의 부모 생성자를 직접 호출할 수도 있다. ```this```는 호출된 객체를 가리키는 것이라면(나) ```base```는 부모로부터 상속받은 멤버들에 접근할 수 있는 키워드다.
-
-- 개발자가 명시하지 않으면 부모 클래스의 디폴트 생성자가 호출된다.
-  - 부모 클래스에 생성자 정의가 아예 없거나(이 경우 컴파일러가 자동으로 만들어 줌) 혹은 디폴트 생성자 정의가 되어 있다면 문제가 되지 않지만
-  - 부모 클래스에 매개 변수가 있는 생성자들은 있는데 디폴트 생성자 정의는 없는 경우에는 컴파일러가 자동으로 만들어 주지 않는다.
-    - 따라서 이런 경우에는 다른 부모 생성자 호출을 직접 명시하지 않으면 컴파일 에러가 난다. 부모 클래스의 디폴트 생성자를 정의해주거나, 혹은 개발자가 매개 변수가 있는 특정 부모 생성자를 직접 호출시켜 주어야 한다.
+- 부모 클래스(기반 클래스) : 상속해주는 클래스
+- 자식 클래스(파생 클래스) : 상속 받는 클래스
 
 ```c#
-class Player
-  {
-      protected int hp = 0;
+namespace Program {
+    public class Person
+    {
+        public string Gender { get; set; } = "Unknown";
+        public string doubleStr (string str)
+        {
+            return $"{str}{str}";
+        }
+    }
+    public class Student : Person // Person클래스를 상속
+    {
+        public string Dept { get; set; } = "Unknown";
+        public int Grade { get; set; } = 0;
+    }
 
-      protected Player(int hp) { this.hp = hp; }
-  }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Person person = new Person()
+            {
+                Gender = "female"
+            };
+            Console.WriteLine(person.Gender); // female
+            Console.WriteLine(person.doubleStr(person.Gender)); // femalefemale
 
-  class Knight : Player
-  {
-      public Knight()  // ❌ 컴파일 에러 발생 👉 부모인 Player에 디폴트 생성자가 없어 호출할 수 없다. 
-      {
-
-      }
-  }
-
-  class Mage : Player
-  {
-      publi Mage() : base(30)  // ⭕ 문제 되지 않는다. 특정한 부모 생성자를 직접 호출해주었기 때문에
-      {
-
-      }
-  }
-```
-
-```c#
-  class Player
-  {
-      protected int hp = 0;
-  }
-
-  class Knight : Player
-  {
-      public Knight() // ⭕ 문제 되지 않는다. 부모 생성자 딱히 정의된게 없기 때문에 디폴트 부모 생성자를 컴파일러가 자동으로 만들어 호출해주기 때문.
-      {
-
-      }
-  }
+            Student student = new Student()
+            {
+                Gender = "male",
+                Dept = "CE",
+                Grade = 2
+            };
+            Console.WriteLine(student.Gender); // male
+            Console.WriteLine(student.doubleStr(student.Dept)); // CECE
+            Console.WriteLine(student.Grade); // 2
+        }
+    }
+}
 ```
 
 <br>
 
+# ※ sealed 키워드
+```sealed``` 키워드를 붙여 클래스가 상속되지 않도록 하거나, 메소드가 자식클래스에서 오버라이드 되지 않도록 할 수 있다.
+
+## 클래스 상속 제한
+아래 코드는 sealed설정된 클래스를 상속하려고 해 오류가 발생한다.
+
+    오류 CS0509 'Wonjin': sealed 형식 'Student'에서 파생될 수 없습니다.
+
+```c#
+public class Person
+{
+    public string Gender { get; set; } = "Unknown";
+    public string doubleStr (string str)
+    {
+        return $"{str}{str}";
+    }
+}
+
+public sealed class Student : Person // Person클래스를 상속
+{
+    public string Dept { get; set; } = "Unknown";
+}
+
+class Wonjin : Student // <-- 컴파일오류 CS0509
+{
+    // something
+}
+```
+
+## 메소드 오버라이드 제한
+virtual 메소드를 오버라이드한 메소드의 오버라이드를 제한할 수 있다.
+
+아래 코드는 sealed 설정된 메소드를 오버라이드 하려 시도해 컴파일 오류가 발생한다.
+
+    CS0239 'Wonjin.SaySomething(string)': 상속된 'Student.SaySomething(string)' 멤버는 봉인되어 있으므로 재정의할 수 없습니다.
+
+<br>
+
+# ※ 부모/자식 클래스 형식변환
+- 부모에 자식 대입 (암시적변환)
+- 자식에 부모 대입 (명시적변환) : 런타임에러 발생 가능
+
+## 암시적 형변환
+암시적 형변환은 메소드 오버로드의 대안으로 사용할 수 있다.
+
+이 때, 부모 클래스의 배열은 자식 클래스를 원소로 가질수 있다.
+
+```c#
+namespace Program
+{
+    class SayMachine
+    {
+        public void SayGender(Person obj)
+        {
+            obj.SaySomething(obj.Gender);
+        }
+    }
+
+    class Person
+    {
+        public string Gender { get; set; } = "Unknown";
+        public void SaySomething(string str)
+        {
+            Console.WriteLine(str);
+        }
+    }
+    class Student : Person
+    {
+        public string Dept { get; set; } = "CE";
+    }
+    class Wonjin : Student
+    {
+        public string Name { get; set; } = "wonjinLee";
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Student student = new Student() { Gender = "female" };
+            Wonjin wonjin = new Wonjin() { Gender = "male" };
+
+            Person[] persons = new Person[] { student, wonjin };
+
+            SayMachine sayMachine = new SayMachine();
+            foreach (Person person in persons)
+            {
+                sayMachine.SayGender(person);
+                // female
+                // male
+            }
+        }
+    }
+}
+```
+
+<br>
+
+# ※ is, as 연산자
+## as 연산자
+형식변환 연산자와 동일하게 동작하나, 변환 실패 시 런타임 에러가 발생하지 않음. 대신 객체 참조에 null 대입.
+
+## is 연산자
+객체가 해당 형식이 맞는지 검사하여 true, false 반환
+
+```c#
+class Person {
+    public string Gender { get; set; } = "Unknown";
+}
+class Student : Person {
+    public string Dept { get; set; } = "Unknown";
+}
+class Wonjin : Student {
+    public string Name { get; set; } = "Unknown";
+}
+
+class Program {
+    static void Main(string[] args)
+    {
+        Person person1 = new Person();
+        Person person2 = new Student();
+        Student student = new Student();
+        Wonjin wonjin = new Wonjin();
+            
+        // as연산자
+        student = person1 as Student; // person1객체를 Student클래스로 형변환
+        if(student != null) { /* 여긴 올일이없다*/ }
+        else
+        {
+            Console.WriteLine("student는 null"); // 출력됨
+        }
+
+        student = person2 as Student; // person2객체를 Student클래스로 형변환
+        if (student != null)
+        {
+            Console.WriteLine("student는 person2"); // 출력됨
+        }
+        else { /* 여긴 올일이없다*/ }
+
+        // is연산자
+        if (person2 is Wonjin) { /* 여긴 올일이없다*/ }
+        if (wonjin is Person)
+        {
+            Console.WriteLine("wonjin은 Person");  // 출력됨
+        }
+    }
+}
+```
+
+<br>
+
+# ※ 부모/자식 클래스 생성자, 종료자
+자식클래스를 생성한 경우, 아래 순서로 실행된다.
+1. 부모클래스의 생성자 실행
+2. 자식클래스의 생성자 실행
+3. 자식클래스의 종료자 실행
+4. 부모클래스의 종료자 실행
+
+```c#
+class Person
+{
+    public Person (int a)
+    {
+        Console.WriteLine($"Person 생성자, 매개변수 a = {a}");
+    }
+    ~Person ()
+    {
+        Console.WriteLine("Person 종료자");
+    }
+}
+class Student : Person
+{
+    public Student(int a, int b) : base(a)
+    {
+        Console.WriteLine($"Student 생성자, 매개변수 b = {b}");
+    }
+    ~Student() {
+        Console.WriteLine("Student 종료자");
+    }
+}
+
+class Program
+{
+    static void Test()
+    {
+        Student student = new Student(53, 53535353);
+    }
+    static void Main(string[] args)
+    {
+        Test();
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        /*
+        Person 생성자, 매개변수 a = 53
+        Student 생성자, 매개변수 b = 53535353
+        Student 종료자
+        Person 종료자
+        */
+    }
+}
+```
+
+<br>
+
+# ※ object
+```object``` 클래스는 모든 클래스의 부모이다.
+
+아래 코드와 같이 Object클래스로 정의되어있다.
+
+```c#
+public class Object
+{
+    public virtual bool Equals();
+    public virtual int GetHashCode();
+    public Type GetType();
+    public virtual string ToString();
+}
+
+<br>
+
 # ※ 참고 사이트
-- [공부하는 식빵맘](https://ansohxxn.github.io/c%20sharp/ch5-3/)
+- [yiwonjin - C#프로그래밍 08 : 상속성](https://velog.io/@yiwonjin/C%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-08-%EC%83%81%EC%86%8D%EC%84%B1)

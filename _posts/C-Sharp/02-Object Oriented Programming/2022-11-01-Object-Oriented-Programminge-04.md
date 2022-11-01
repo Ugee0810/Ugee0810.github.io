@@ -1,5 +1,5 @@
 ---
-title:      C# Object Oriented Programming#03 | 은닉성(=캡슐화) + 프로퍼티와 get/set, 레코드, 무명형식
+title:      C# Object Oriented Programming#04 | 은닉성(=캡슐화) + 프로퍼티와 get/set, 레코드, 무명형식
 date:       "2022-11-01"
 categories: ["C#", "02.Object Oriented Programming"]
 tags:       ["C#", "Object Oriented Programming"]
