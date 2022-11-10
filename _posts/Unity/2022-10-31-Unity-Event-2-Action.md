@@ -24,11 +24,12 @@ tags:       ["Unity"]
 <br>
 
 # ※ Apply
+## 1번째 방법(대리자)
 ```c#
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using System; // <--- Action 클래스를 사용하기 위해 필수 선언
 
 public class Action : MonoBehaviour
 {
@@ -60,7 +61,43 @@ public class Action : MonoBehaviour
 }
 ```
 
+## 2번째 방법(람다식) <--- 추천
+```c#
+using System // <--- 역시 Action 클래스를 사용하기 위해 필수 선언
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Target : MonoBehaviour // <--- 오리진 클래스에서 실행될 타겟 클래스
+{
+    public static Action target; // <--- 액션 클래스 필드 선언
+    
+    void Awake()
+    {
+        target = () => { }; // <--- 람다식 사용
+
+        target = () =>
+        {
+            Mission();
+            Text();
+        };
+    }
+
+    public void Mission()
+    {
+        Debug.Log("미션 성공");
+    }
+
+    public void Text()
+    {
+        Debug.Log("여러 개도 가능~!");
+    }
+}
+
+```
+
 <br>
 
 # ※ Reference Site
 - [유니티 이벤트 완벽하게 이해하기 4 - 액션과 람다 함수](https://daebalstudio.tistory.com/entry/%EC%95%A1%EC%85%98%EA%B3%BC-%EB%9E%8C%EB%8B%A4-%ED%95%A8%EC%88%98-%EC%99%84%EB%B2%BD%ED%95%98%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0?category=698562)
+- [오늘코딩 - [유니티꿀팁] 다른 스크립트의 함수를 쉽게 가져오는 방법](https://youtu.be/3lBuHT3HM-Q)
